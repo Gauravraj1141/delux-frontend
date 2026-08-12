@@ -226,6 +226,8 @@ export default function RadioPlayer() {
           opacity: 0.001,
           pointerEvents: "none",
           zIndex: -1,
+          overflow: "hidden",
+          clipPath: "inset(0)",
         }}
       >
         <div id="yt-player" />
