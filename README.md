@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Deluxe Saloon — a 24/7 Hindi film radio player, built with [Next.js](https://nextjs.org).
 
-## Getting Started
-
-First, run the development server:
+## Local development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the result. The page auto-updates as you edit files under `app/` and `components/`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env` and adjust as needed:
 
-## Learn More
+```bash
+cp .env.example .env
+```
 
-To learn more about Next.js, take a look at the following resources:
+| Variable               | Purpose                                         | Production value                  |
+| ----------------------- | ------------------------------------------------ | ---------------------------------- |
+| `NEXT_PUBLIC_API_URL`   | Base URL of the FastAPI backend                  | `https://api.deluxesalonsongs.com` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`NEXT_PUBLIC_*` variables are inlined into the browser bundle at **build time**, not read at runtime — see [Docker build](#docker-build) below for how the production value is supplied during image builds.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Production build (without Docker)
 
-## Deploy on Vercel
+```bash
+npm run build
+npm start
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Docker
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app builds a minimal production image using Next.js [standalone output](https://nextjs.org/docs/app/api-reference/config/next-config-js/output) (`output: "standalone"` in `next.config.ts`), so the final image only ships the traced runtime files, not the full `node_modules`.
+
+### Docker build
+
+```bash
+docker build -t deluxsalon-frontend .
+```
+
+To bake a different `NEXT_PUBLIC_API_URL` into the build (defaults to the production API if omitted):
+
+```bash
+docker build \
+  --build-arg NEXT_PUBLIC_API_URL=https://api.deluxesalonsongs.com \
+  -t deluxsalon-frontend .
+```
+
+### Docker run
+
+```bash
+docker run --rm -p 3000:3000 deluxsalon-frontend
+```
+
+Then verify at [http://localhost:3000](http://localhost:3000) and confirm the browser's network calls (once the app makes any) target `https://api.deluxesalonsongs.com`, not `localhost` or a VPS IP.
+
+The container listens on `0.0.0.0:3000` and runs `node server.js` (the Next.js standalone entrypoint) — it never runs `next dev`.
+
+## GHCR image
+
+CI builds and pushes the image to GitHub Container Registry on every push to `main` (see `.github/workflows/build-and-push.yml`):
+
+```text
+ghcr.io/gauravraj1141/deluxsalon-frontend:latest
+ghcr.io/gauravraj1141/deluxsalon-frontend:<commit-sha>
+```
+
+The workflow authenticates with the built-in `GITHUB_TOKEN` (no manually managed registry credentials) and bakes `NEXT_PUBLIC_API_URL=https://api.deluxesalonsongs.com` in as a build argument, so the production API URL is what actually ends up embedded in the shipped bundle.
+
+## VPS deployment
+
+The VPS only needs the compose file and the prebuilt image — not this repository's source code.
+
+`docker-compose.production.yml` (or the equivalent service block in the VPS's main compose file):
+
+```yaml
+frontend:
+  image: ghcr.io/gauravraj1141/deluxsalon-frontend:latest
+  container_name: deluxsalon-frontend
+  restart: unless-stopped
+  ports:
+    - "127.0.0.1:3000:3000"
+  networks:
+    - deluxsalon-network
+```
+
+Port 3000 is bound to `127.0.0.1` only — it is never exposed publicly. [Caddy](https://caddyserver.com/) on the VPS terminates TLS and reverse-proxies `https://deluxesalonsongs.com` to `127.0.0.1:3000` (and `https://api.deluxesalonsongs.com` to the FastAPI container on `127.0.0.1:8000`). This repo does not configure Caddy.
+
+Deploy/update on the VPS:
+
+```bash
+docker compose -f docker-compose.production.yml pull
+docker compose -f docker-compose.production.yml up -d
+```
+
+### Deployment flow
+
+```text
+push to main → GitHub Actions → Docker build → GHCR (latest + <sha>)
+                                                       │
+                                                       ▼
+                                    VPS: docker compose pull && up -d
+```
+
+## Learn more
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Next.js Docker deployment guide](https://nextjs.org/docs/app/building-your-application/deploying#docker-image)
