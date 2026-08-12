@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useLiveClock } from "@/lib/useLiveClock";
 import { useListenerCount } from "@/lib/useListenerCount";
 
@@ -9,7 +8,7 @@ export default function Header() {
   const listenerCount = useListenerCount();
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-30 px-4 md:px-6 lg:px-8 py-3 md:py-4">
+    <header className="fixed top-0 left-0 right-0 z-[50] px-4 md:px-6 lg:px-8 py-3 md:py-4">
       <div className="flex items-start justify-between">
         {/* Left: Clock + Listener count (md+ only, hidden on mobile — shown in Hero instead) */}
         <div className="hidden md:flex flex-col gap-0.5 pt-1">
@@ -30,7 +29,7 @@ export default function Header() {
         {/* Right: Navigation */}
         <div className="flex flex-col items-end gap-2 flex-shrink-0">
           <nav className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
-            <Link
+            <a
               href="#playlists"
               className="text-[12px] text-white/70 hover:text-white transition-colors duration-200 px-3.5 py-1.5 rounded-full"
               style={{
@@ -41,7 +40,7 @@ export default function Header() {
               }}
             >
               Playlists
-            </Link>
+            </a>
           </nav>
         </div>
       </div>
