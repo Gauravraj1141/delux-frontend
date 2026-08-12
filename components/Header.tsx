@@ -26,23 +26,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Right: Navigation */}
-        <div className="flex flex-col items-end gap-2 flex-shrink-0">
-          <nav className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
-            <a
-              href="#playlists"
-              className="text-[12px] text-white/70 hover:text-white transition-colors duration-200 px-3.5 py-1.5 rounded-full"
-              style={{
-                background: "rgba(255,255,255,0.1)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-                border: "1px solid rgba(255,255,255,0.08)",
-              }}
-            >
-              Playlists
-            </a>
-          </nav>
-        </div>
+        {/* Right: Navigation (hidden for now) */}
       </div>
     </header>
   );

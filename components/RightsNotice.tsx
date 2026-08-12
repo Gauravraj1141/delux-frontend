@@ -1,4 +1,6 @@
-import { RIGHTS_TEXT, CONTACT_EMAIL } from "@/lib/constants";
+import { RIGHTS_TEXT } from "@/lib/constants";
+
+const RIGHTS_EMAIL = "indreshchaudhary963@gmail.com";
 
 export default function RightsNotice() {
   return (
@@ -8,10 +10,17 @@ export default function RightsNotice() {
           {RIGHTS_TEXT}
           {" "}If you hold rights to anything here and want it taken off, email{" "}
           <a
-            href={`mailto:${CONTACT_EMAIL}`}
+            href={`mailto:${RIGHTS_EMAIL}`}
             className="underline hover:text-white/50 transition-colors duration-200"
           >
-            {CONTACT_EMAIL}
+            {RIGHTS_EMAIL}
+          </a>{" "}
+          or{" "}
+          <a
+            href="mailto:hanudasgaurav@gmail.com"
+            className="underline hover:text-white/50 transition-colors duration-200"
+          >
+            hanudasgaurav@gmail.com
           </a>{" "}
           and it comes down.
         </p>

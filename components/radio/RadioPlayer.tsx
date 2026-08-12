@@ -3,13 +3,14 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import TrackCarousel from "./TrackCarousel";
 import PlayerControls from "./PlayerControls";
-import { tracks, getVisibleTracks, wrapIndex } from "./trackData";
+import { wrapIndex } from "./trackData";
 import { useYouTubePlayer } from "./useYouTubePlayer";
-import { CONTACT_EMAIL } from "@/lib/constants";
+import { usePlaylistLoader } from "./usePlaylistLoader";
 
 type PlayerState = "idle" | "loading" | "playing" | "paused" | "error";
 
 export default function RadioPlayer() {
+  const { tracks } = usePlaylistLoader();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [state, setState] = useState<PlayerState>("idle");
   const [currentTime, setCurrentTime] = useState(0);
@@ -20,8 +21,16 @@ export default function RadioPlayer() {
   const [toast, setToast] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const currentTrack = tracks[currentIndex];
-  const visibleTracks = getVisibleTracks(currentIndex);
+  const safeIndex = wrapIndex(currentIndex, tracks.length);
+  const currentTrack = tracks[safeIndex];
+  const len = tracks.length;
+  const visibleTracks = [
+    tracks[wrapIndex(safeIndex - 2, len)],
+    tracks[wrapIndex(safeIndex - 1, len)],
+    tracks[wrapIndex(safeIndex, len)],
+    tracks[wrapIndex(safeIndex + 1, len)],
+    tracks[wrapIndex(safeIndex + 2, len)],
+  ];
 
   const statusText: Record<PlayerState, string> = {
     idle: "Tuning in…",
@@ -181,15 +190,6 @@ export default function RadioPlayer() {
           />
         </div>
 
-        {/* Contact */}
-        <div className="mt-4 text-center">
-          <a
-            href={`mailto:${CONTACT_EMAIL}`}
-            className="text-[10px] text-white/15 hover:text-white/30 transition-colors duration-200"
-          >
-            contact: {CONTACT_EMAIL}
-          </a>
-        </div>
       </div>
 
       {/* Skip toast */}
