@@ -157,6 +157,19 @@ body {
   animation: smog-rise-3 18s ease-in-out infinite;
 }
 
+/* Reduce expensive effects on mobile */
+@media (max-width: 767px) {
+  .track-card {
+    will-change: transform, opacity;
+  }
+}
+
+/* Sections below the fold: defer rendering */
+section + section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 200px;
+}
+
 input[type="range"] {
   -webkit-appearance: none;
   appearance: none;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState } from "react";
 
 // Extend Window to include YouTube IFrame API types
 declare global {
@@ -103,6 +103,8 @@ export function useYouTubePlayer(
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const optionsRef = useRef(options);
   optionsRef.current = options;
+  const initStarted = useRef(false);
+  const pendingVideoId = useRef<string | null>(null);
 
   function startTimePolling() {
     stopTimePolling();
@@ -126,11 +128,12 @@ export function useYouTubePlayer(
     }
   }
 
-  useEffect(() => {
-    let destroyed = false;
+  const initPlayer = useCallback(() => {
+    if (initStarted.current || playerRef.current) return;
+    initStarted.current = true;
 
     loadYouTubeAPI().then(() => {
-      if (destroyed || playerRef.current) return;
+      if (playerRef.current) return;
 
       const container = document.getElementById(containerId);
       if (!container) return;
@@ -151,10 +154,13 @@ export function useYouTubePlayer(
         },
         events: {
           onReady: () => {
-            if (!destroyed) setReady(true);
+            setReady(true);
+            if (pendingVideoId.current) {
+              playerRef.current?.loadVideoById(pendingVideoId.current);
+              pendingVideoId.current = null;
+            }
           },
           onStateChange: (event) => {
-            if (destroyed) return;
             const state = event.data;
             optionsRef.current.onStateChange?.(state);
 
@@ -169,26 +175,23 @@ export function useYouTubePlayer(
             }
           },
           onError: (event) => {
-            if (destroyed) return;
             console.warn("YouTube player error:", event.data);
             optionsRef.current.onError?.();
           },
         },
       });
     });
-
-    return () => {
-      destroyed = true;
-      stopTimePolling();
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerId]);
 
   const playVideo = useCallback((videoId: string) => {
     if (playerRef.current) {
       playerRef.current.loadVideoById(videoId);
+    } else {
+      pendingVideoId.current = videoId;
+      initPlayer();
     }
-  }, []);
+  }, [initPlayer]);
 
   const cueVideo = useCallback((videoId: string) => {
     if (playerRef.current) {

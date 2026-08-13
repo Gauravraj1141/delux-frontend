@@ -25,7 +25,7 @@ export default function FullscreenButton() {
       type="button"
       onClick={toggle}
       aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-      className="fixed bottom-6 right-6 z-[100] p-2.5 rounded-full cursor-pointer transition-opacity duration-200 hover:opacity-80"
+      className="fixed bottom-6 right-6 z-[100] p-2.5 rounded-full cursor-pointer transition-opacity duration-200 hover:opacity-80 hidden md:block"
       style={{
         background: "rgba(255, 255, 255, 0.07)",
         backdropFilter: "blur(8px) saturate(1.2)",

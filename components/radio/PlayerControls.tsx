@@ -119,6 +119,13 @@ export default function PlayerControls({
               </p>
             </div>
             <div className="flex items-center gap-2 mt-1 flex-shrink-0">
+              <button
+                onClick={() => setVolumeOpen((v) => !v)}
+                className="cursor-pointer text-white transition-colors duration-200"
+                aria-label={volumeOpen ? "Close volume" : "Open volume"}
+              >
+                {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+              </button>
               {volumeOpen && (
                 <input
                   type="range"
@@ -131,13 +138,6 @@ export default function PlayerControls({
                   aria-label="Volume"
                 />
               )}
-              <button
-                onClick={() => setVolumeOpen((v) => !v)}
-                className="cursor-pointer text-white transition-colors duration-200"
-                aria-label={volumeOpen ? "Close volume" : "Open volume"}
-              >
-                {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-              </button>
             </div>
           </div>
 
@@ -257,6 +257,8 @@ export default function PlayerControls({
                       src={track.artwork || getYouTubeThumbnail(track.videoId)}
                       alt=""
                       className="w-full h-full object-cover"
+                      loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <div
