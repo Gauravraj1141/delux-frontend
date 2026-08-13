@@ -1,0 +1,20 @@
+# Example VPS deployment. The VPS only needs this file (and the FastAPI
+# service's own compose config) — it pulls the prebuilt image from GHCR and
+# never needs the frontend source code.
+#
+#   docker compose -f docker-compose.production.yml pull
+#   docker compose -f docker-compose.production.yml up -d
+
+services:
+  frontend:
+    image: ghcr.io/gauravraj1141/deluxsalon-frontend:latest
+    container_name: deluxsalon-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    networks:
+      - deluxsalon-network
+
+networks:
+  deluxsalon-network:
+    external: true
