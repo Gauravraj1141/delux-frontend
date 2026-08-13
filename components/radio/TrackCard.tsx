@@ -58,7 +58,7 @@ function ArtworkPlaceholder({ track }: { track: Track }) {
     >
       <div className="w-full h-full flex flex-col items-center justify-end pb-4">
         <div className="text-white/20 text-[8px] tracking-[0.2em] uppercase">
-          Deluxe Saloon
+          Deluxe Salon Songs
         </div>
       </div>
     </div>

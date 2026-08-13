@@ -20,27 +20,27 @@ const SITE_URL = "https://deluxsalongsongs.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Deluxe Saloon | Deluxe Salon — 90s Hindi Songs Radio | डीलक्स सैलून",
-    template: "%s | Deluxe Saloon — Deluxe Salon Radio",
+    default: "Deluxe Salon Songs — 90s Hindi Songs Radio | डीलक्स सैलून सॉन्ग्स",
+    template: "%s | Deluxe Salon Songs Radio",
   },
   description:
-    "Deluxe Saloon (Deluxe Salon) — a live 90s Bollywood radio station. The Deluxe Saloon plays the songs that actually play in Indian barbershops, truck cabins and highway dhabas. Listen to Deluxe Salon songs free online, playing round the clock. Also known as DeluxeSaloon, DeluxeSalon, डीलक्स सैलून.",
+    "Deluxe Salon Songs — a live 90s Bollywood radio station. Deluxe Salon Songs plays the songs that actually play in Indian barbershops, truck cabins and highway dhabas. Listen free online, playing round the clock. Also known as Deluxe Saloon, DeluxeSaloon, DeluxeSalon, डीलक्स सैलून.",
   keywords: [
+    "Deluxe Salon Songs",
     "Deluxe Saloon",
     "Deluxe Salon",
+    "deluxesalonsongs",
     "deluxesaloon",
     "deluxesalon",
+    "Deluxe Salon Songs radio",
     "Deluxe Saloon songs",
     "Deluxe Salon songs",
-    "Deluxe Saloon radio",
-    "Deluxe Salon radio",
-    "Deluxe Saloon music",
-    "Deluxe Salon music",
-    "Deluxe Saloon playlist",
-    "Deluxe Salon playlist",
-    "Deluxe Saloon live",
+    "Deluxe Salon Songs music",
+    "Deluxe Salon Songs playlist",
+    "Deluxe Salon Songs live",
     "डीलक्स सैलून",
     "डीलक्स सैलून गाने",
+    "डीलक्स सैलून सॉन्ग्स",
     "डीलक्स सलून",
     "Hindi songs",
     "90s Hindi songs",
@@ -58,34 +58,34 @@ export const metadata: Metadata = {
     "Indian barbershop music",
     "highway dhaba songs",
     "truck cabin music",
-    "deluxe saloon website",
-    "deluxe salon website",
+    "deluxe salon songs website",
+    "deluxesalonsongs",
   ],
-  authors: [{ name: "Deluxe Saloon" }],
-  creator: "Deluxe Saloon",
-  publisher: "Deluxe Salon",
+  authors: [{ name: "Deluxe Salon Songs" }],
+  creator: "Deluxe Salon Songs",
+  publisher: "Deluxe Salon Songs",
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: SITE_URL,
-    siteName: "Deluxe Saloon — Deluxe Salon",
-    title: "Deluxe Saloon | Deluxe Salon — 90s Hindi Songs, Playing Live | डीलक्स सैलून",
+    siteName: "Deluxe Salon Songs",
+    title: "Deluxe Salon Songs — 90s Hindi Songs, Playing Live | डीलक्स सैलून सॉन्ग्स",
     description:
-      "Deluxe Saloon (Deluxe Salon) — a live 90s Bollywood radio. The songs that actually play in Indian barbershops, truck cabins and highway dhabas. Listen free on Deluxe Saloon.",
+      "Deluxe Salon Songs — a live 90s Bollywood radio. The songs that actually play in Indian barbershops, truck cabins and highway dhabas. Listen free on Deluxe Salon Songs.",
     images: [
       {
         url: "/opengraph-image",
         width: 1200,
         height: 630,
-        alt: "Deluxe Saloon — Deluxe Salon — 90s Hindi Songs Radio",
+        alt: "Deluxe Salon Songs — 90s Hindi Songs Radio",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Deluxe Saloon | Deluxe Salon — 90s Hindi Songs, Playing Live",
+    title: "Deluxe Salon Songs — 90s Hindi Songs, Playing Live",
     description:
-      "Deluxe Saloon (Deluxe Salon) — a live 90s Bollywood radio. Listen to Hindi film songs free, playing round the clock. डीलक्स सैलून",
+      "Deluxe Salon Songs — a live 90s Bollywood radio. Listen to Hindi film songs free, playing round the clock. डीलक्स सैलून सॉन्ग्स",
     images: ["/opengraph-image"],
   },
   robots: {
@@ -115,10 +115,10 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
-      name: "Deluxe Saloon",
-      alternateName: ["Deluxe Salon", "डीलक्स सैलून", "डीलक्स सलून", "deluxesaloon", "deluxesalon", "Deluxe Saloon Radio", "Deluxe Salon Radio", "Deluxe Saloon Songs"],
+      name: "Deluxe Salon Songs",
+      alternateName: ["Deluxe Saloon", "Deluxe Salon", "डीलक्स सैलून", "डीलक्स सैलून सॉन्ग्स", "डीलक्स सलून", "deluxesalonsongs", "deluxesaloon", "deluxesalon"],
       description:
-        "Deluxe Saloon (Deluxe Salon) — a live 90s Bollywood radio station. Deluxe Saloon plays the songs that actually play in Indian barbershops, truck cabins and highway dhabas.",
+        "Deluxe Salon Songs — a live 90s Bollywood radio station playing the songs that actually play in Indian barbershops, truck cabins and highway dhabas.",
       potentialAction: {
         "@type": "SearchAction",
         target: {
@@ -131,8 +131,8 @@ const jsonLd = {
     {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
-      name: "Deluxe Saloon",
-      alternateName: ["Deluxe Salon", "deluxesaloon", "deluxesalon"],
+      name: "Deluxe Salon Songs",
+      alternateName: ["Deluxe Saloon", "Deluxe Salon", "deluxesalonsongs", "deluxesaloon", "deluxesalon"],
       url: SITE_URL,
       logo: {
         "@type": "ImageObject",
@@ -144,16 +144,16 @@ const jsonLd = {
     {
       "@type": "RadioStation",
       "@id": `${SITE_URL}/#station`,
-      name: "Deluxe Saloon",
-      alternateName: ["Deluxe Salon", "डीलक्स सैलून", "डीलक्स सलून", "Deluxe Saloon Radio", "Deluxe Salon Songs"],
+      name: "Deluxe Salon Songs",
+      alternateName: ["Deluxe Saloon", "Deluxe Salon", "डीलक्स सैलून", "डीलक्स सैलून सॉन्ग्स", "डीलक्स सलून"],
       url: SITE_URL,
       description:
-        "Deluxe Saloon (Deluxe Salon) — free online Hindi radio playing 90s Bollywood film songs round the clock. Listen to Deluxe Saloon songs live.",
+        "Deluxe Salon Songs — free online Hindi radio playing 90s Bollywood film songs round the clock. Listen live.",
       areaServed: {
         "@type": "Country",
         name: "India",
       },
-      genre: ["Bollywood", "Hindi film music", "1990s", "Retro", "Indian", "Deluxe Saloon", "Deluxe Salon"],
+      genre: ["Bollywood", "Hindi film music", "1990s", "Retro", "Indian", "Deluxe Salon Songs", "Deluxe Saloon"],
     },
   ],
 };
@@ -168,9 +168,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
         <meta name="theme-color" content="#0a0a0a" />
-        <link rel="preconnect" href="https://www.youtube-nocookie.com" />
-        <link rel="preconnect" href="https://i.ytimg.com" />
         <link rel="dns-prefetch" href="https://www.youtube-nocookie.com" />
+        <link rel="dns-prefetch" href="https://i.ytimg.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

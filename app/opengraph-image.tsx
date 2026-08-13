@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Deluxe Saloon — 90s Hindi Songs Radio";
+export const alt = "Deluxe Salon Songs — 90s Hindi Songs Radio";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -61,7 +61,7 @@ export default function OGImage() {
           }}
         >
           <span>डीलक्स</span>
-          <span>सैलून</span>
+          <span>सैलून सॉन्ग्स</span>
         </div>
 
         {/* Subtitle */}
@@ -75,7 +75,7 @@ export default function OGImage() {
             display: "flex",
           }}
         >
-          Deluxe Saloon · Open All Hours
+          Deluxe Salon Songs · Open All Hours
         </div>
 
         {/* Description */}

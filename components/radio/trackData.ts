@@ -148,7 +148,7 @@ export const tracks: Track[] = [
 
 /** YouTube thumbnail URL for a video */
 export function getYouTubeThumbnail(videoId: string): string {
-  return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+  return `https://i.ytimg.com/vi_webp/${videoId}/mqdefault.webp`;
 }
 
 /** Circular index into the track list */

@@ -1,8 +1,8 @@
-export const SITE_TITLE = "Deluxe Saloon";
+export const SITE_TITLE = "Deluxe Salon Songs";
 export const SITE_TITLE_HINDI = "डीलक्स सैलून";
 export const SITE_SUBTITLE = "open all hours";
 export const SITE_DESCRIPTION =
-  '90s Hindi film songs, playing round the clock — the kind of tape that never stops at a neighbourhood barber shop. Also written "Deluxe Salon", though the board outside almost always reads saloon.';
+  '90s Hindi film songs, playing round the clock — the kind of tape that never stops at a neighbourhood barber shop.';
 
 export const PLAYLISTS = [
   { name: "Highway Raat", href: "#highway-raat" },

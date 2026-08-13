@@ -43,12 +43,7 @@ export default function RadioPlayer() {
   const showToast = useCallback((message: string) => {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setToast(message);
-    toastTimerRef.current = setTimeout(() => setToast(null), 6000);
-  }, []);
-
-  const clearToast = useCallback(() => {
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    setToast(null);
+    toastTimerRef.current = setTimeout(() => setToast(null), 3000);
   }, []);
 
   // Cleanup timer on unmount
@@ -106,12 +101,9 @@ export default function RadioPlayer() {
       setState("loading");
       stateRef.current = "loading";
 
-      // Clear toast when user manually switches tracks
-      if (offset !== 0) clearToast();
-
       yt.playVideo(tracks[nextIndex].videoId);
     },
-    [currentIndex, yt, clearToast],
+    [currentIndex, yt],
   );
 
   goToTrackRef.current = goToTrack;
@@ -194,9 +186,9 @@ export default function RadioPlayer() {
 
       {/* Skip toast */}
       <div
-        className="fixed left-1/2 -translate-x-1/2 z-[100] transition-all duration-300 ease-out"
+        className="fixed left-4 z-[100] transition-all duration-300 ease-out"
         style={{
-          bottom: toast ? "32px" : "-60px",
+          bottom: toast ? "24px" : "-60px",
           opacity: toast ? 1 : 0,
           pointerEvents: toast ? "auto" : "none",
         }}

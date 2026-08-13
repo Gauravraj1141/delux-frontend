@@ -11,7 +11,7 @@ export default function Hero() {
     <section className="relative w-full h-screen min-h-[600px] max-h-[1200px] overflow-hidden">
       {/* Background image */}
       <img
-        src="/images/saloon-hero.png"
+        src="/images/saloon-hero.webp"
         alt="Illustration of an Indian street-side barbershop — a barber cutting hair while neighbours sit outside next to a chai stall"
         className="absolute inset-0 w-full h-full object-cover"
         style={{ objectPosition: "center 40%" }}
@@ -19,6 +19,38 @@ export default function Hero() {
 
       {/* Subtle top gradient for header readability */}
       <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent z-[1]" />
+
+      {/* Top smog effect — lighter version, descending from top */}
+      <div
+        className="absolute inset-x-0 top-0 z-[2] pointer-events-none"
+        style={{ height: "55%" }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.35) 12%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.04) 70%, transparent 95%)",
+          }}
+        />
+        <div
+          className="absolute inset-x-[-10%] top-0 animate-smog-2"
+          style={{
+            height: "115%",
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.25) 18%, rgba(0,0,0,0.12) 40%, rgba(0,0,0,0.04) 60%, transparent 80%)",
+            filter: "url(#smog-turbulence-1) blur(10px)",
+          }}
+        />
+        <div
+          className="absolute inset-x-[-15%] top-0 animate-smog-3"
+          style={{
+            height: "120%",
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 20%, rgba(0,0,0,0.05) 45%, transparent 65%)",
+            filter: "url(#smog-turbulence-3) blur(16px)",
+          }}
+        />
+      </div>
       {/* Bottom gradient for transition to content */}
       <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black/50 to-transparent z-[1]" />
 
@@ -115,7 +147,7 @@ export default function Hero() {
       {/* Title overlay */}
       <div className="absolute inset-0 flex flex-col items-center justify-start pt-[14vh] sm:pt-[15vh] md:pt-[12vh] px-5 z-[3] pointer-events-none">
         <h1
-          className="text-[4.5rem] sm:text-[5.5rem] md:text-[7rem] lg:text-[8.5rem] font-bold text-white text-center leading-[0.9]"
+          className="text-[4.5rem] sm:text-[5.5rem] md:text-[7rem] lg:text-[8.5rem] font-bold text-white text-center leading-[1.15]"
           style={{
             fontFamily: "var(--font-hindi), sans-serif",
             textShadow:
@@ -124,17 +156,8 @@ export default function Hero() {
         >
           डीलक्स
           <br />
-          सैलून
+          सैलून सॉन्ग्स
         </h1>
-        <p
-          className="mt-4 md:mt-6 text-[10px] sm:text-[11px] md:text-[13px] text-white/55 tracking-[0.3em] uppercase text-center"
-          style={{
-            textShadow: "0 1px 10px rgba(0,0,0,0.6)",
-          }}
-        >
-          Deluxe Saloon &nbsp;·&nbsp; open all hours
-        </p>
-
         {/* Clock + Listener count (below md only) */}
         <div className="flex md:hidden flex-col items-center gap-0.5 mt-6">
           <p className="text-[22px] font-bold text-white/80 tracking-wide tabular-nums leading-tight">
