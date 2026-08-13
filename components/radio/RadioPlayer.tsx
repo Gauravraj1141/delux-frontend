@@ -5,18 +5,20 @@ import TrackCarousel from "./TrackCarousel";
 import PlayerControls from "./PlayerControls";
 import { wrapIndex } from "./trackData";
 import { useYouTubePlayer } from "./useYouTubePlayer";
-import { usePlaylistLoader } from "./usePlaylistLoader";
+import { usePlaylist } from "./PlaylistContext";
 
 type PlayerState = "idle" | "loading" | "playing" | "paused" | "error";
 
 export default function RadioPlayer() {
-  const { tracks } = usePlaylistLoader();
+  const { tracks, shuffleTracks } = usePlaylist();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [state, setState] = useState<PlayerState>("idle");
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.8);
   const [muted, setMuted] = useState(false);
+  const [loop, setLoop] = useState(false);
+  const loopRef = useRef(false);
   const stateRef = useRef<PlayerState>("idle");
   const [toast, setToast] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -78,7 +80,12 @@ export default function RadioPlayer() {
       if (dur > 0) setDuration(dur);
     },
     onEnded: () => {
-      goToTrackRef.current(1);
+      if (loopRef.current) {
+        yt.seekTo(0);
+        yt.play();
+      } else {
+        goToTrackRef.current(1);
+      }
     },
     onError: () => {
       // Save the name of the skipped track for the toast
@@ -164,7 +171,7 @@ export default function RadioPlayer() {
         />
 
         {/* Glass control bar */}
-        <div className="mt-6 md:mt-8 max-w-[560px] mx-auto">
+        <div className="mt-14 md:mt-8 max-w-[680px] mx-auto">
           <PlayerControls
             track={currentTrack}
             isPlaying={state === "playing"}
@@ -178,6 +185,16 @@ export default function RadioPlayer() {
             onSeek={handleSeek}
             onVolumeChange={handleVolumeChange}
             onToggleMute={toggleMute}
+            loop={loop}
+            onToggleLoop={() => {
+              setLoop((v) => !v);
+              loopRef.current = !loopRef.current;
+            }}
+            onShuffle={() => {
+              shuffleTracks();
+              setCurrentIndex(0);
+              setCurrentTime(0);
+            }}
             status={statusText[state]}
           />
         </div>

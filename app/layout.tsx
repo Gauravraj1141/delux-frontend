@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Sans_Devanagari } from "next/font/google";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
 const inter = Inter({
@@ -8,10 +9,9 @@ const inter = Inter({
   display: "swap",
 });
 
-const notoDevanagari = Noto_Sans_Devanagari({
-  subsets: ["devanagari"],
+const teko = localFont({
+  src: "../public/fonts/Teko-Bold.ttf",
   variable: "--font-hindi",
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -162,7 +162,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-IN"
-      className={`${inter.variable} ${notoDevanagari.variable} h-full antialiased`}
+      className={`${inter.variable} ${teko.variable} h-full antialiased`}
     >
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />

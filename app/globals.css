@@ -84,18 +84,18 @@ body {
 
 /* Track card sizing */
 .track-card-size {
-  width: 105px;
+  width: 170px;
 }
 
 @media (min-width: 450px) {
   .track-card-size {
-    width: 140px;
+    width: 190px;
   }
 }
 
 @media (min-width: 640px) {
   .track-card-size {
-    width: 155px;
+    width: 195px;
   }
 }
 

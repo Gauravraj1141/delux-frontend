@@ -1,24 +1,33 @@
 "use client";
 
 import RadioPlayer from "@/components/radio/RadioPlayer";
-import { useLiveClock } from "@/lib/useLiveClock";
+import WeatherCard from "@/components/WeatherCard";
 import { useListenerCount } from "@/lib/useListenerCount";
 
+function getHeroImage(): string {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 11) return "/images/salon-morning.webp";
+  if (hour >= 11 && hour < 16) return "/images/salon-noon.webp";
+  if (hour >= 16 && hour < 20) return "/images/salon-evening.webp";
+  return "/images/salon-night.webp";
+}
+
 export default function Hero() {
-  const { time, date } = useLiveClock();
   const listenerCount = useListenerCount();
+  const heroImage = getHeroImage();
+
   return (
     <section className="relative w-full h-screen min-h-[600px] max-h-[1200px] overflow-hidden">
-      {/* Background image */}
+      {/* Background image — changes based on time of day */}
       <img
-        src="/images/saloon-hero.webp"
-        alt="Illustration of an Indian street-side barbershop — a barber cutting hair while neighbours sit outside next to a chai stall"
+        src={heroImage}
+        alt="Illustration of an Indian street-side barbershop"
         className="absolute inset-0 w-full h-full object-cover"
         style={{ objectPosition: "center 40%" }}
       />
 
       {/* Subtle top gradient for header readability */}
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent z-[1]" />
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent z-[1] pointer-events-none" />
 
       {/* Top smog effect — lighter version, descending from top */}
       <div
@@ -147,7 +156,7 @@ export default function Hero() {
       {/* Title overlay */}
       <div className="absolute inset-0 flex flex-col items-center justify-start pt-[14vh] sm:pt-[15vh] md:pt-[12vh] px-5 z-[3] pointer-events-none">
         <h1
-          className="text-[4.5rem] sm:text-[5.5rem] md:text-[7rem] lg:text-[8.5rem] font-bold text-white text-center leading-[1.15]"
+          className="text-[4.5rem] sm:text-[5.5rem] md:text-[7rem] lg:text-[8.5rem] font-bold text-white text-center leading-[0.95]"
           style={{
             fontFamily: "var(--font-hindi), sans-serif",
             textShadow:
@@ -158,21 +167,27 @@ export default function Hero() {
           <br />
           सैलून सॉन्ग्स
         </h1>
-        {/* Clock + Listener count (below md only) */}
-        <div className="flex md:hidden flex-col items-center gap-0.5 mt-6">
-          <p className="text-[22px] font-bold text-white/80 tracking-wide tabular-nums leading-tight">
-            {time}
-          </p>
-          <p className="text-[9px] text-white/60 font-medium tracking-[0.2em] uppercase leading-tight mt-1.5">
-            {date}
-          </p>
-          <div className="flex items-center gap-1.5 mt-2">
-            <span className="inline-block w-[7px] h-[7px] rounded-full bg-green-400 animate-pulse-dot" />
-            <span className="text-[12px] text-white font-semibold">
-              {listenerCount} listening
-            </span>
-          </div>
+        {/* Listener count pill */}
+        <div
+          className="mt-5 md:mt-6 flex items-center gap-2 rounded-full px-4 py-2"
+          style={{
+            background: "rgba(255, 255, 255, 0.07)",
+            backdropFilter: "blur(8px) saturate(1.2)",
+            WebkitBackdropFilter: "blur(8px) saturate(1.2)",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
+            boxShadow: "0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+          }}
+        >
+          <span className="inline-block w-[7px] h-[7px] rounded-full bg-green-400 animate-pulse-dot" />
+          <span className="text-[12px] md:text-[13px] text-white/80 font-semibold">
+            {listenerCount.toLocaleString()} listening
+          </span>
         </div>
+      </div>
+
+      {/* Weather card — top right, hidden on mobile */}
+      <div className="absolute top-6 right-6 z-[8] hidden md:block pointer-events-auto">
+        <WeatherCard />
       </div>
 
       {/* Radio player pinned to bottom of hero */}

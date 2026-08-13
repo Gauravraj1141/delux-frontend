@@ -19,24 +19,24 @@ interface PosStyle {
 
 const POS: Record<Position, { desktop: PosStyle; mobile: PosStyle }> = {
   "previous-2": {
-    desktop: { tx: -130, ry: 35, scale: 0.65, opacity: 1, z: 1 },
-    mobile:  { tx: -105, ry: 35, scale: 0.55, opacity: 1, z: 1 },
+    desktop: { tx: -130, ry: 35, scale: 0.65, opacity: 0.7, z: 1 },
+    mobile:  { tx: 0, ry: 0, scale: 0, opacity: 0, z: 0 },
   },
   "previous-1": {
-    desktop: { tx: -68, ry: 22, scale: 0.8, opacity: 1, z: 2 },
-    mobile:  { tx: -55, ry: 22, scale: 0.72, opacity: 1, z: 2 },
+    desktop: { tx: -68, ry: 22, scale: 0.8, opacity: 0.75, z: 2 },
+    mobile:  { tx: -60, ry: 20, scale: 0.82, opacity: 0.6, z: 2 },
   },
   current: {
     desktop: { tx: 0, ry: 0, scale: 1, opacity: 1, z: 5 },
     mobile:  { tx: 0, ry: 0, scale: 1, opacity: 1, z: 5 },
   },
   "next-1": {
-    desktop: { tx: 68, ry: -22, scale: 0.8, opacity: 1, z: 2 },
-    mobile:  { tx: 55, ry: -22, scale: 0.72, opacity: 1, z: 2 },
+    desktop: { tx: 68, ry: -22, scale: 0.8, opacity: 0.75, z: 2 },
+    mobile:  { tx: 60, ry: -20, scale: 0.82, opacity: 0.6, z: 2 },
   },
   "next-2": {
-    desktop: { tx: 130, ry: -35, scale: 0.65, opacity: 1, z: 1 },
-    mobile:  { tx: 105, ry: -35, scale: 0.55, opacity: 1, z: 1 },
+    desktop: { tx: 130, ry: -35, scale: 0.65, opacity: 0.7, z: 1 },
+    mobile:  { tx: 0, ry: 0, scale: 0, opacity: 0, z: 0 },
   },
 };
 

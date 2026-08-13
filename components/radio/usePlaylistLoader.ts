@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import type { Track } from "./trackData";
 import { tracks as hardcodedTracks } from "./trackData";
 
@@ -18,12 +18,22 @@ interface PlaylistState {
   source: "api" | "hardcoded";
 }
 
-export function usePlaylistLoader(): PlaylistState {
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+export function usePlaylistLoader() {
   const [state, setState] = useState<PlaylistState>({
     tracks: hardcodedTracks,
     loading: true,
     source: "hardcoded",
   });
+  const originalTracksRef = useRef<Track[]>(hardcodedTracks);
   const fetchedRef = useRef(false);
 
   useEffect(() => {
@@ -32,7 +42,6 @@ export function usePlaylistLoader(): PlaylistState {
 
     (async () => {
       try {
-        // Step 1: Fetch all playlists
         const playlistsRes = await fetch(`${API_BASE}/api/v1/playlists`, {
           signal: AbortSignal.timeout(8000),
         });
@@ -41,10 +50,8 @@ export function usePlaylistLoader(): PlaylistState {
         const playlists: Playlist[] = await playlistsRes.json();
         if (!playlists.length) throw new Error("No playlists found");
 
-        // Pick the first playlist
         const playlistId = playlists[0].id;
 
-        // Step 2: Fetch songs for that playlist
         const songsRes = await fetch(
           `${API_BASE}/api/v1/playlists/${playlistId}/songs`,
           { signal: AbortSignal.timeout(10000) },
@@ -54,13 +61,23 @@ export function usePlaylistLoader(): PlaylistState {
         const songs: Track[] = await songsRes.json();
         if (!songs.length) throw new Error("No songs found");
 
-        setState({ tracks: songs, loading: false, source: "api" });
+        const shuffled = shuffle(songs);
+        originalTracksRef.current = songs;
+        setState({ tracks: shuffled, loading: false, source: "api" });
       } catch {
-        // Fallback to hardcoded data
-        setState({ tracks: hardcodedTracks, loading: false, source: "hardcoded" });
+        const shuffled = shuffle(hardcodedTracks);
+        originalTracksRef.current = hardcodedTracks;
+        setState({ tracks: shuffled, loading: false, source: "hardcoded" });
       }
     })();
   }, []);
 
-  return state;
+  const shuffleTracks = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      tracks: shuffle(prev.tracks),
+    }));
+  }, []);
+
+  return { ...state, shuffleTracks };
 }

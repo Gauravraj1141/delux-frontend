@@ -27,15 +27,27 @@ export default function TrackCarousel({
 
   return (
     <div className="relative w-full">
-      {/* Ambient blurred background from current track */}
+      {/* Ambient blurred background from current track — organic spread */}
       <div
-        className="absolute inset-0 -inset-x-20 -inset-y-16 overflow-hidden rounded-3xl"
+        className="absolute inset-0 overflow-visible pointer-events-none"
         aria-hidden
       >
         <div
-          className="absolute inset-0 scale-150 blur-[80px] opacity-30"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100%] h-[115%] blur-[90px] opacity-22"
           style={{
-            background: `radial-gradient(ellipse at center, ${currentTrack.color} 0%, transparent 70%)`,
+            background: `radial-gradient(ellipse 60% 48% at 50% 50%, ${currentTrack.color} 0%, transparent 100%)`,
+          }}
+        />
+        <div
+          className="absolute top-[43%] left-[33%] -translate-x-1/2 -translate-y-1/2 w-[40%] h-[58%] blur-[70px] opacity-13"
+          style={{
+            background: `radial-gradient(circle at center, ${currentTrack.color} 0%, transparent 100%)`,
+          }}
+        />
+        <div
+          className="absolute top-[51%] left-[67%] -translate-x-1/2 -translate-y-1/2 w-[35%] h-[50%] blur-[65px] opacity-13"
+          style={{
+            background: `radial-gradient(circle at center, ${currentTrack.color} 0%, transparent 100%)`,
           }}
         />
       </div>

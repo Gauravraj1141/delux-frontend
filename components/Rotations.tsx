@@ -1,7 +1,12 @@
-import Link from "next/link";
-import { PLAYLISTS } from "@/lib/constants";
+"use client";
+
+import { usePlaylist } from "@/components/radio/PlaylistContext";
 
 export default function Rotations() {
+  const { playlists, activePlaylistId, loadPlaylist } = usePlaylist();
+
+  if (!playlists.length) return null;
+
   return (
     <section
       id="playlists"
@@ -12,14 +17,19 @@ export default function Rotations() {
           Rotations
         </h2>
         <div className="flex flex-wrap gap-x-5 gap-y-2.5">
-          {PLAYLISTS.map((playlist) => (
-            <Link
-              key={playlist.name}
-              href={playlist.href}
-              className="text-[14px] md:text-[15px] text-white/70 hover:text-white transition-colors duration-200 underline underline-offset-4 decoration-white/15 hover:decoration-white/40"
+          {playlists.map((playlist) => (
+            <button
+              key={playlist.id}
+              type="button"
+              onClick={() => loadPlaylist(playlist.id)}
+              className={`text-[14px] md:text-[15px] transition-colors duration-200 cursor-pointer ${
+                playlist.id === activePlaylistId
+                  ? "text-white font-semibold underline underline-offset-4 decoration-white/40"
+                  : "text-white/50 hover:text-white/80"
+              }`}
             >
-              {playlist.name}
-            </Link>
+              {playlist.title}
+            </button>
           ))}
         </div>
       </div>
