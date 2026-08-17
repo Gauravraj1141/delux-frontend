@@ -1,8 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { ChevronDown } from "lucide-react";
 import RadioPlayer from "@/components/radio/RadioPlayer";
+import { usePlaylist } from "@/components/radio/PlaylistContext";
 import { useListenerCount } from "@/lib/useListenerCount";
 
 const WeatherCard = dynamic(() => import("@/components/WeatherCard"), {
@@ -104,6 +106,103 @@ export function SmogEffects() {
 export function PresenceTracker() {
   useListenerCount();
   return null;
+}
+
+const glass = {
+  background: "rgba(255, 255, 255, 0.07)",
+  backdropFilter: "blur(12px) saturate(1.3)",
+  WebkitBackdropFilter: "blur(12px) saturate(1.3)",
+  border: "1px solid rgba(255, 255, 255, 0.12)",
+  boxShadow:
+    "0 4px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08)",
+} as const;
+
+function EqBars() {
+  return (
+    <div className="flex items-end gap-[2px] h-[12px]">
+      <span className="w-[2.5px] bg-green-400 rounded-full animate-eq-1" />
+      <span className="w-[2.5px] bg-green-400 rounded-full animate-eq-2" />
+      <span className="w-[2.5px] bg-green-400 rounded-full animate-eq-3" />
+    </div>
+  );
+}
+
+export function PlaylistBar() {
+  const { playlists, activePlaylistId, loadPlaylist } = usePlaylist();
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const activePlaylist = playlists.find((p) => p.id === activePlaylistId);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  return (
+    <div className="flex items-center gap-2.5 pointer-events-auto">
+      {/* Playlist dropdown */}
+      <div ref={dropdownRef} className="relative">
+        <button
+          onClick={() => playlists.length > 1 && setOpen((v) => !v)}
+          className="flex items-center gap-2 rounded-full px-3.5 py-2 cursor-pointer transition-colors duration-200"
+          style={glass}
+        >
+          <EqBars />
+          <span className="text-[12px] md:text-[13px] font-medium text-white/85 max-w-[140px] md:max-w-[200px] truncate">
+            {activePlaylist?.title ?? "Deluxe Mix"}
+          </span>
+          {playlists.length > 1 && (
+            <ChevronDown
+              size={14}
+              className={`text-white/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            />
+          )}
+        </button>
+
+        {open && playlists.length > 1 && (
+          <div
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 min-w-[180px] rounded-xl py-1.5 overflow-hidden animate-fade-in"
+            style={{
+              ...glass,
+              background: "rgba(20, 16, 12, 0.85)",
+              backdropFilter: "blur(20px) saturate(1.4)",
+              WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+            }}
+          >
+            {playlists.map((playlist) => {
+              const isActive = playlist.id === activePlaylistId;
+              return (
+                <button
+                  key={playlist.id}
+                  onClick={() => {
+                    loadPlaylist(playlist.id);
+                    setOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-left transition-colors duration-150 cursor-pointer ${
+                    isActive
+                      ? "text-white bg-white/8"
+                      : "text-white/60 hover:text-white/90 hover:bg-white/5"
+                  }`}
+                >
+                  {isActive && <EqBars />}
+                  <span className={`text-[12px] md:text-[13px] truncate ${isActive ? "font-semibold" : "font-normal"}`}>
+                    {playlist.title}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export function HeroWeather() {

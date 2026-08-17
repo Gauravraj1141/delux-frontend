@@ -6,15 +6,23 @@ export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
   const lat = searchParams.get("lat");
   const lon = searchParams.get("lon");
-  const query = lat && lon ? `${lat},${lon}` : "bijnor";
+
+  if (!lat || !lon) {
+    return NextResponse.json(
+      { error: "Location required" },
+      { status: 400 },
+    );
+  }
+
+  const query = encodeURIComponent(`${lat},${lon}`);
 
   try {
     const res = await fetch(
       `https://weatherapi-com.p.rapidapi.com/current.json?q=${query}`,
       {
         headers: {
-          "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
-          "x-rapidapi-key": API_KEY,
+          "X-RapidAPI-Key": API_KEY,
+          "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
         },
         next: { revalidate: 600 },
       },

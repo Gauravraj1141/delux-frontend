@@ -15,7 +15,7 @@ const teko = localFont({
   display: "swap",
 });
 
-const SITE_URL = "https://deluxsalongsongs.com";
+const SITE_URL = "https://deluxesalonsongs.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -168,6 +168,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
         <meta name="theme-color" content="#0a0a0a" />
+        <meta name="google-site-verification" content="z06AbGArLI23gl4rBnhCoWH_U1jVV7_mwDFgmQliAa0" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QHMDVXX6W3" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QHMDVXX6W3');`,
+          }}
+        />
         <link rel="preconnect" href="https://i.ytimg.com" />
         <link rel="dns-prefetch" href="https://www.youtube.com" />
         <script

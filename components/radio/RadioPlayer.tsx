@@ -10,7 +10,7 @@ import { usePlaylist } from "./PlaylistContext";
 type PlayerState = "idle" | "loading" | "playing" | "paused" | "error";
 
 export default function RadioPlayer() {
-  const { tracks, shuffleTracks } = usePlaylist();
+  const { tracks } = usePlaylist();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [state, setState] = useState<PlayerState>("idle");
   const [currentTime, setCurrentTime] = useState(0);
@@ -18,7 +18,9 @@ export default function RadioPlayer() {
   const [volume, setVolume] = useState(0.8);
   const [muted, setMuted] = useState(false);
   const [loop, setLoop] = useState(false);
+  const [shuffleOn, setShuffleOn] = useState(false);
   const loopRef = useRef(false);
+  const shuffleRef = useRef(false);
   const stateRef = useRef<PlayerState>("idle");
   const [toast, setToast] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -57,6 +59,7 @@ export default function RadioPlayer() {
 
   const goToTrackRef = useRef<(offset: number) => void>(() => {});
   const skippedTrackRef = useRef<string | null>(null);
+  const prevTracksRef = useRef(tracks);
 
   const yt = useYouTubePlayer("yt-player", {
     onStateChange: (ytState) => {
@@ -99,9 +102,29 @@ export default function RadioPlayer() {
     },
   });
 
+  // Auto-play first track when playlist changes
+  useEffect(() => {
+    if (prevTracksRef.current === tracks) return;
+    prevTracksRef.current = tracks;
+    setCurrentIndex(0);
+    setCurrentTime(0);
+    setDuration(tracks[0].duration);
+    setState("loading");
+    stateRef.current = "loading";
+    yt.playVideo(tracks[0].videoId);
+  }, [tracks, yt]);
+
   const goToTrack = useCallback(
     (offset: number) => {
-      const nextIndex = wrapIndex(currentIndex + offset, tracks.length);
+      let nextIndex: number;
+      if (shuffleRef.current) {
+        // Pick a random track that isn't the current one
+        do {
+          nextIndex = Math.floor(Math.random() * tracks.length);
+        } while (nextIndex === currentIndex && tracks.length > 1);
+      } else {
+        nextIndex = wrapIndex(currentIndex + offset, tracks.length);
+      }
       setCurrentIndex(nextIndex);
       setCurrentTime(0);
       setDuration(tracks[nextIndex].duration);
@@ -110,7 +133,7 @@ export default function RadioPlayer() {
 
       yt.playVideo(tracks[nextIndex].videoId);
     },
-    [currentIndex, yt],
+    [currentIndex, yt, tracks.length],
   );
 
   goToTrackRef.current = goToTrack;
@@ -190,10 +213,10 @@ export default function RadioPlayer() {
               setLoop((v) => !v);
               loopRef.current = !loopRef.current;
             }}
+            shuffleOn={shuffleOn}
             onShuffle={() => {
-              shuffleTracks();
-              setCurrentIndex(0);
-              setCurrentTime(0);
+              setShuffleOn((v) => !v);
+              shuffleRef.current = !shuffleRef.current;
             }}
             status={statusText[state]}
           />
