@@ -103,6 +103,8 @@ export function SmogEffects() {
 export function ListenerCount() {
   const listenerCount = useListenerCount();
 
+  if (listenerCount === null) return null;
+
   return (
     <div
       className="mt-5 md:mt-6 flex items-center gap-2 rounded-full px-4 py-2"

@@ -2,33 +2,46 @@
 
 import { useState, useEffect, useRef } from "react";
 
+const API_BASE = "https://api.deluxesalonsongs.com";
+
 export function useListenerCount() {
-  const [count, setCount] = useState(9500);
-  const countRef = useRef(9500);
+  const [count, setCount] = useState<number | null>(null);
+  const mountedRef = useRef(true);
 
   useEffect(() => {
-    const update = () => {
-      const current = countRef.current;
-      // Small random drift: -50 to +60 from current value
-      const drift = Math.floor(Math.random() * 111) - 50;
-      let next = current + drift;
-      // Clamp between 7000 and 12000
-      next = Math.max(7000, Math.min(12000, next));
-      countRef.current = next;
-      setCount(next);
+    mountedRef.current = true;
+
+    const beat = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/api/v1/presence/heartbeat`, {
+          method: "POST",
+          credentials: "include",
+          signal: AbortSignal.timeout(8000),
+        });
+        if (!res.ok) return;
+        const data: { count: number } = await res.json();
+        if (mountedRef.current) setCount(data.count);
+      } catch {
+        // Network hiccup - keep showing the last known count until the next beat succeeds.
+      }
     };
 
     const scheduleNext = () => {
-      // Update every 15–30 seconds
-      const delay = 15000 + Math.random() * 15000;
+      // Heartbeat every 20-30s, comfortably under the backend's 10/minute rate limit.
+      const delay = 20000 + Math.random() * 10000;
       return setTimeout(() => {
-        update();
+        beat();
         timerId = scheduleNext();
       }, delay);
     };
 
+    beat();
     let timerId = scheduleNext();
-    return () => clearTimeout(timerId);
+
+    return () => {
+      mountedRef.current = false;
+      clearTimeout(timerId);
+    };
   }, []);
 
   return count;
