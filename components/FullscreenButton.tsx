@@ -6,12 +6,6 @@ import { Maximize, Minimize } from "lucide-react";
 export default function FullscreenButton() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  useEffect(() => {
-    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener("fullscreenchange", onChange);
-    return () => document.removeEventListener("fullscreenchange", onChange);
-  }, []);
-
   const toggle = useCallback(() => {
     if (document.fullscreenElement) {
       document.exitFullscreen();
@@ -19,6 +13,26 @@ export default function FullscreenButton() {
       document.documentElement.requestFullscreen();
     }
   }, []);
+
+  useEffect(() => {
+    const onChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onChange);
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "f" || e.key === "F") {
+        const tag = (e.target as HTMLElement)?.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+        e.preventDefault();
+        toggle();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", onChange);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [toggle]);
 
   return (
     <button

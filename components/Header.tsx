@@ -27,24 +27,24 @@ export default function Header() {
           />
         </div>
 
-        {/* Listener count */}
-        <div
-          className="pointer-events-auto flex items-center gap-1.5 rounded-full px-2.5 py-1.5"
-          style={glass}
-        >
-          <span className="inline-block w-[7px] h-[7px] rounded-full bg-green-400 animate-pulse-dot flex-shrink-0" />
-          {listenerCount !== null && (
+        {/* Listener count — hidden until API responds */}
+        {listenerCount !== null && (
+          <div
+            className="pointer-events-auto flex items-center gap-1.5 rounded-full px-2.5 py-1.5"
+            style={glass}
+          >
+            <span className="inline-block w-[7px] h-[7px] rounded-full bg-green-400 animate-pulse-dot flex-shrink-0" />
             <span className="text-[11px] md:text-[12px] text-white/70 font-semibold tabular-nums">
               {listenerCount.toLocaleString()}
             </span>
-          )}
-          {/* Mobile: headphone icon */}
-          <Headphones size={13} className="md:hidden text-white/60" />
-          {/* Desktop: "Listening" text */}
-          <span className="hidden md:inline text-[11px] text-white/50 font-medium">
-            Listening
-          </span>
-        </div>
+            {/* Mobile: headphone icon */}
+            <Headphones size={13} className="md:hidden text-white/60" />
+            {/* Desktop: "Listening" text */}
+            <span className="hidden md:inline text-[11px] text-white/50 font-medium">
+              Listening
+            </span>
+          </div>
+        )}
       </div>
     </header>
   );
