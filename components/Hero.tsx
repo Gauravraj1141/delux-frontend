@@ -1,4 +1,4 @@
-import { SmogEffects, ListenerCount, HeroWeather, HeroPlayer } from "./HeroClient";
+import { SmogEffects, PresenceTracker, HeroWeather, HeroPlayer } from "./HeroClient";
 
 function getHeroImage(): string {
   const hour = new Date().getHours();
@@ -74,7 +74,7 @@ export default function Hero() {
           <br />
           सैलून सॉन्ग्स
         </h1>
-        <ListenerCount />
+        <PresenceTracker />
       </div>
 
       {/* Weather card — top right, hidden on mobile */}

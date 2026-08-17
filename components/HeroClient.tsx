@@ -100,28 +100,10 @@ export function SmogEffects() {
   );
 }
 
-export function ListenerCount() {
-  const listenerCount = useListenerCount();
-
-  if (listenerCount === null) return null;
-
-  return (
-    <div
-      className="mt-5 md:mt-6 flex items-center gap-2 rounded-full px-4 py-2"
-      style={{
-        background: "rgba(255, 255, 255, 0.07)",
-        backdropFilter: "blur(8px) saturate(1.2)",
-        WebkitBackdropFilter: "blur(8px) saturate(1.2)",
-        border: "1px solid rgba(255, 255, 255, 0.15)",
-        boxShadow: "0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
-      }}
-    >
-      <span className="inline-block w-[7px] h-[7px] rounded-full bg-green-400 animate-pulse-dot" />
-      <span className="text-[12px] md:text-[13px] text-white/80 font-semibold">
-        {listenerCount.toLocaleString()} listening
-      </span>
-    </div>
-  );
+// No public UI - just keeps sending heartbeats so the admin panel can see live listener counts.
+export function PresenceTracker() {
+  useListenerCount();
+  return null;
 }
 
 export function HeroWeather() {
