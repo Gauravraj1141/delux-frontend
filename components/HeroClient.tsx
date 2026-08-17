@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { ChevronDown } from "lucide-react";
 import RadioPlayer from "@/components/radio/RadioPlayer";
 import { usePlaylist } from "@/components/radio/PlaylistContext";
+import { useListenerCount } from "@/lib/useListenerCount";
 
 const WeatherCard = dynamic(() => import("@/components/WeatherCard"), {
   ssr: false,
@@ -99,6 +100,12 @@ export function SmogEffects() {
       </div>
     </>
   );
+}
+
+// No public UI - just keeps sending heartbeats so the admin panel can see live listener counts.
+export function PresenceTracker() {
+  useListenerCount();
+  return null;
 }
 
 const glass = {
