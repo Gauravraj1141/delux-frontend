@@ -127,6 +127,7 @@ function EqBars() {
   );
 }
 
+// Mobile-only playlist bar (below heading)
 export function PlaylistBar() {
   const { playlists, activePlaylistId, loadPlaylist } = usePlaylist();
   const [open, setOpen] = useState(false);
@@ -145,9 +146,10 @@ export function PlaylistBar() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
+  if (!playlists.length) return null;
+
   return (
-    <div className="flex items-center gap-2.5 pointer-events-auto">
-      {/* Playlist dropdown */}
+    <div className="flex items-center gap-2.5 pointer-events-auto md:hidden">
       <div ref={dropdownRef} className="relative">
         <button
           onClick={() => playlists.length > 1 && setOpen((v) => !v)}
@@ -155,7 +157,7 @@ export function PlaylistBar() {
           style={glass}
         >
           <EqBars />
-          <span className="text-[12px] md:text-[13px] font-medium text-white/85 max-w-[140px] md:max-w-[200px] truncate">
+          <span className="text-[12px] font-medium text-white/85 max-w-[140px] truncate">
             {activePlaylist?.title ?? "Deluxe Mix"}
           </span>
           {playlists.length > 1 && (
@@ -168,7 +170,7 @@ export function PlaylistBar() {
 
         {open && playlists.length > 1 && (
           <div
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 min-w-[180px] rounded-xl py-1.5 overflow-hidden animate-fade-in"
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 min-w-[180px] rounded-xl py-1.5 overflow-hidden animate-fade-in z-20"
             style={{
               ...glass,
               background: "rgba(20, 16, 12, 0.85)",
@@ -192,7 +194,7 @@ export function PlaylistBar() {
                   }`}
                 >
                   {isActive && <EqBars />}
-                  <span className={`text-[12px] md:text-[13px] truncate ${isActive ? "font-semibold" : "font-normal"}`}>
+                  <span className={`text-[12px] truncate ${isActive ? "font-semibold" : "font-normal"}`}>
                     {playlist.title}
                   </span>
                 </button>
@@ -206,9 +208,108 @@ export function PlaylistBar() {
 }
 
 export function HeroWeather() {
+  const { playlists, activePlaylistId, loadPlaylist } = usePlaylist();
+  const [playlistOpen, setPlaylistOpen] = useState(false);
+  const [weatherForceClose, setWeatherForceClose] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const activePlaylist = playlists.find((p) => p.id === activePlaylistId);
+
+  // Close playlist dropdown on outside click
+  useEffect(() => {
+    if (!playlistOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setPlaylistOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [playlistOpen]);
+
   return (
     <div className="absolute top-3 right-3 md:top-6 md:right-6 z-[8] pointer-events-auto">
-      <WeatherCard />
+      <WeatherCard
+        onToggle={(isOpen) => {
+          if (isOpen) setPlaylistOpen(false);
+        }}
+        forceClose={weatherForceClose}
+      />
+
+      {/* Desktop playlist strip — below weather, same styling */}
+      {playlists.length > 0 && (
+        <div ref={dropdownRef} className="hidden md:block mt-2.5 relative">
+          <div
+            className="rounded-2xl px-5 py-2.5 flex items-center gap-2 cursor-pointer select-none"
+            style={{
+              background: "rgba(255, 255, 255, 0.07)",
+              backdropFilter: "blur(8px) saturate(1.2)",
+              WebkitBackdropFilter: "blur(8px) saturate(1.2)",
+              border: "1px solid rgba(255, 255, 255, 0.15)",
+              boxShadow: "0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+            }}
+            onClick={() => {
+              if (playlists.length > 1) {
+                const next = !playlistOpen;
+                setPlaylistOpen(next);
+                if (next) {
+                  setWeatherForceClose(true);
+                  requestAnimationFrame(() => setWeatherForceClose(false));
+                }
+              }
+            }}
+          >
+            <EqBars />
+            <span className="text-[13px] font-medium text-white/80 truncate flex-1">
+              {activePlaylist?.title ?? "Deluxe Mix"}
+            </span>
+            {playlists.length > 1 && (
+              <ChevronDown
+                size={16}
+                className={`text-white/60 transition-transform duration-200 ${playlistOpen ? "rotate-180" : ""}`}
+              />
+            )}
+          </div>
+
+          {/* Dropdown */}
+          {playlistOpen && playlists.length > 1 && (
+            <div
+              className="absolute top-full right-0 mt-1.5 w-full min-w-[220px] rounded-xl py-1.5 overflow-hidden animate-fade-in"
+              style={{
+                background: "rgba(20, 16, 12, 0.88)",
+                backdropFilter: "blur(20px) saturate(1.4)",
+                WebkitBackdropFilter: "blur(20px) saturate(1.4)",
+                border: "1px solid rgba(255, 255, 255, 0.12)",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+              }}
+            >
+              {playlists.map((playlist) => {
+                const isActive = playlist.id === activePlaylistId;
+                return (
+                  <button
+                    key={playlist.id}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      loadPlaylist(playlist.id);
+                      setPlaylistOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-left transition-colors duration-150 cursor-pointer ${
+                      isActive
+                        ? "text-white bg-white/8"
+                        : "text-white/60 hover:text-white/90 hover:bg-white/5"
+                    }`}
+                  >
+                    {isActive && <EqBars />}
+                    <span className={`text-[13px] truncate ${isActive ? "font-semibold" : "font-normal"}`}>
+                      {playlist.title}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

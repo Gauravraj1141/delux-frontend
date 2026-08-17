@@ -25,6 +25,8 @@ export default function RadioPlayer() {
     toggleShuffle,
   } = usePlayer();
 
+  if (!currentTrack) return null;
+
   return (
     <section className="w-full pt-14 pb-4">
       <div className="max-w-[900px] mx-auto px-4 md:px-6">

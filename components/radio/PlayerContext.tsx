@@ -16,7 +16,7 @@ function updateUrlParams(playlistId: number | null, videoId: string) {
 }
 
 interface PlayerContextValue {
-  currentTrack: Track;
+  currentTrack: Track | null;
   currentIndex: number;
   state: PlayerState;
   currentTime: number;
@@ -62,16 +62,18 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [toast, setToast] = useState<string | null>(null);
   const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const safeIndex = wrapIndex(currentIndex, tracks.length);
-  const currentTrack = tracks[safeIndex];
   const len = tracks.length;
-  const visibleTracks = [
-    tracks[wrapIndex(safeIndex - 2, len)],
-    tracks[wrapIndex(safeIndex - 1, len)],
-    tracks[wrapIndex(safeIndex, len)],
-    tracks[wrapIndex(safeIndex + 1, len)],
-    tracks[wrapIndex(safeIndex + 2, len)],
-  ];
+  const safeIndex = len > 0 ? wrapIndex(currentIndex, len) : 0;
+  const currentTrack = len > 0 ? tracks[safeIndex] : null;
+  const visibleTracks = len > 0
+    ? [
+        tracks[wrapIndex(safeIndex - 2, len)],
+        tracks[wrapIndex(safeIndex - 1, len)],
+        tracks[wrapIndex(safeIndex, len)],
+        tracks[wrapIndex(safeIndex + 1, len)],
+        tracks[wrapIndex(safeIndex + 2, len)],
+      ]
+    : [];
 
   const STATUS_TEXT: Record<PlayerState, string> = {
     idle: "Tuning in\u2026",
@@ -202,6 +204,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   goToTrackRef.current = goToTrack;
 
   const togglePlay = useCallback(() => {
+    if (!currentTrack) return;
     if (stateRef.current === "playing") {
       yt.pause();
     } else if (stateRef.current === "paused") {

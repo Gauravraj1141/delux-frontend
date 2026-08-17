@@ -44,7 +44,7 @@ export function usePlaylist() {
 }
 
 export function PlaylistProvider({ children }: { children: React.ReactNode }) {
-  const [tracks, setTracks] = useState<Track[]>(hardcodedTracks);
+  const [tracks, setTracks] = useState<Track[]>([]);
   const [loading, setLoading] = useState(true);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [activePlaylistId, setActivePlaylistId] = useState<number | null>(null);

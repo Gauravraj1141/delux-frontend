@@ -25,11 +25,22 @@ const glass = {
     "0 4px 24px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
 } as const;
 
-export default function WeatherCard() {
+export default function WeatherCard({
+  onToggle,
+  forceClose,
+}: {
+  onToggle?: (isOpen: boolean) => void;
+  forceClose?: boolean;
+}) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [now, setNow] = useState(new Date());
   const [open, setOpen] = useState(true);
   const [tickerIndex, setTickerIndex] = useState(0);
+
+  // Allow parent to force close
+  useEffect(() => {
+    if (forceClose && open) setOpen(false);
+  }, [forceClose, open]);
 
   useEffect(() => {
     function fetchWeather(lat: number, lon: number) {
@@ -126,7 +137,11 @@ export default function WeatherCard() {
       <div
         className="hidden md:flex rounded-2xl px-5 py-2.5 items-center gap-2 cursor-pointer select-none"
         style={glass}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          const next = !open;
+          setOpen(next);
+          onToggle?.(next);
+        }}
       >
         <svg
           width="14"

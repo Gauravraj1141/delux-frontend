@@ -22,6 +22,8 @@ export default function MiniPlayer() {
     togglePlay,
   } = usePlayer();
 
+  if (!currentTrack) return null;
+
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const isPlaying = state === "playing";
 
