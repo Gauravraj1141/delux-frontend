@@ -66,7 +66,14 @@ export function PlaylistProvider({ children }: { children: React.ReactNode }) {
 
         setPlaylists(data);
 
-        const playlistId = data[0].id;
+        // Check URL for persisted playlist + song
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlPlaylistId = urlParams.get("playlist");
+        const urlSongId = urlParams.get("song");
+        const matchedPlaylist = urlPlaylistId
+          ? data.find((p) => String(p.id) === urlPlaylistId)
+          : null;
+        const playlistId = matchedPlaylist ? matchedPlaylist.id : data[0].id;
         setActivePlaylistId(playlistId);
 
         const songsRes = await fetch(
@@ -78,10 +85,10 @@ export function PlaylistProvider({ children }: { children: React.ReactNode }) {
         const songs: Track[] = await songsRes.json();
         if (!songs.length) throw new Error("No songs found");
 
-        setTracks(shuffle(songs));
+        setTracks(songs);
         setLoading(false);
       } catch {
-        setTracks(shuffle(hardcodedTracks));
+        setTracks(hardcodedTracks);
         setLoading(false);
       }
     })();
