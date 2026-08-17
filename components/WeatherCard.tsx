@@ -32,17 +32,14 @@ export default function WeatherCard() {
   const [tickerIndex, setTickerIndex] = useState(0);
 
   useEffect(() => {
-    function fetchWeather(lat?: number, lon?: number) {
-      const params = lat && lon ? `?lat=${lat}&lon=${lon}` : "";
-      fetch(`/api/weather${params}`)
+    function fetchWeather(lat: number, lon: number) {
+      fetch(`/api/weather?lat=${lat}&lon=${lon}`)
         .then((r) => r.json())
         .then((d) => {
           if (!d.error) setWeather(d);
         })
         .catch(() => {});
     }
-
-    fetchWeather();
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(

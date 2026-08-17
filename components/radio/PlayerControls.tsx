@@ -26,6 +26,7 @@ interface PlayerControlsProps {
   onSeek: (time: number) => void;
   onVolumeChange: (vol: number) => void;
   onToggleMute: () => void;
+  shuffleOn: boolean;
   onShuffle: () => void;
   onToggleLoop: () => void;
   status: string;
@@ -86,6 +87,7 @@ export default function PlayerControls({
   onSeek,
   onVolumeChange,
   onToggleMute,
+  shuffleOn,
   onShuffle,
   onToggleLoop,
 }: PlayerControlsProps) {
@@ -107,7 +109,7 @@ export default function PlayerControls({
     <>
       {/* ===== MOBILE LAYOUT (<560px) ===== */}
       <div className="block sm:hidden rounded-2xl overflow-hidden" style={glassStyle}>
-        <div className="px-5 pt-5 pb-4">
+        <div className="px-5 pt-3 pb-2.5">
           {/* Song title + speaker with inline volume */}
           <div className="flex items-start justify-between">
             <div className="min-w-0 flex-1 mr-3">
@@ -164,8 +166,10 @@ export default function PlayerControls({
           <div className="flex items-center justify-between mt-3">
             <button
               onClick={onShuffle}
-              className="w-9 h-9 flex items-center justify-center text-white transition-colors duration-200 cursor-pointer"
-              aria-label="Shuffle"
+              className={`w-9 h-9 flex items-center justify-center transition-colors duration-200 cursor-pointer ${
+                shuffleOn ? "text-white" : "text-white/40"
+              }`}
+              aria-label={shuffleOn ? "Disable shuffle" : "Enable shuffle"}
             >
               <Shuffle size={18} />
             </button>
@@ -325,8 +329,10 @@ export default function PlayerControls({
                   </button>
                   <button
                     onClick={onShuffle}
-                    className="w-8 h-8 flex items-center justify-center text-white hover:text-white/80 transition-colors duration-200 cursor-pointer"
-                    aria-label="Shuffle"
+                    className={`w-8 h-8 flex items-center justify-center transition-colors duration-200 cursor-pointer ${
+                      shuffleOn ? "text-white" : "text-white/40 hover:text-white/70"
+                    }`}
+                    aria-label={shuffleOn ? "Disable shuffle" : "Enable shuffle"}
                   >
                     <Shuffle size={15} />
                   </button>

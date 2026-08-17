@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://deluxsalongsongs.com/sitemap.xml",
+    sitemap: "https://deluxesalonsongs.com/sitemap.xml",
   };
 }
