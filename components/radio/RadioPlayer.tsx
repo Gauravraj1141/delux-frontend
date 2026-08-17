@@ -9,8 +9,15 @@ import { usePlaylist } from "./PlaylistContext";
 
 type PlayerState = "idle" | "loading" | "playing" | "paused" | "error";
 
+function updateUrlParams(playlistId: number | null, videoId: string) {
+  const url = new URL(window.location.href);
+  if (playlistId !== null) url.searchParams.set("playlist", String(playlistId));
+  url.searchParams.set("song", videoId);
+  window.history.replaceState({}, "", url.toString());
+}
+
 export default function RadioPlayer() {
-  const { tracks } = usePlaylist();
+  const { tracks, activePlaylistId } = usePlaylist();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [state, setState] = useState<PlayerState>("idle");
   const [currentTime, setCurrentTime] = useState(0);
@@ -60,6 +67,8 @@ export default function RadioPlayer() {
   const goToTrackRef = useRef<(offset: number) => void>(() => {});
   const skippedTrackRef = useRef<string | null>(null);
   const prevTracksRef = useRef(tracks);
+  const isFirstLoad = useRef(true);
+  const urlSyncReady = useRef(false);
 
   const yt = useYouTubePlayer("yt-player", {
     onStateChange: (ytState) => {
@@ -102,10 +111,22 @@ export default function RadioPlayer() {
     },
   });
 
-  // Auto-play first track when playlist changes
+  // On first load: restore song from URL. On playlist switch: auto-play first track.
   useEffect(() => {
     if (prevTracksRef.current === tracks) return;
     prevTracksRef.current = tracks;
+    if (isFirstLoad.current) {
+      isFirstLoad.current = false;
+      const songVideoId = new URLSearchParams(window.location.search).get("song");
+      if (songVideoId) {
+        const idx = tracks.findIndex((t) => t.videoId === songVideoId);
+        if (idx !== -1) setCurrentIndex(idx);
+      }
+      // Allow URL sync after next render (once currentIndex has settled)
+      requestAnimationFrame(() => { urlSyncReady.current = true; });
+      return;
+    }
+    urlSyncReady.current = true;
     setCurrentIndex(0);
     setCurrentTime(0);
     setDuration(tracks[0].duration);
@@ -113,6 +134,14 @@ export default function RadioPlayer() {
     stateRef.current = "loading";
     yt.playVideo(tracks[0].videoId);
   }, [tracks, yt]);
+
+  // Sync current playlist + song to URL (only after first load settles)
+  useEffect(() => {
+    if (!urlSyncReady.current) return;
+    if (currentTrack) {
+      updateUrlParams(activePlaylistId, currentTrack.videoId);
+    }
+  }, [currentTrack, activePlaylistId]);
 
   const goToTrack = useCallback(
     (offset: number) => {
