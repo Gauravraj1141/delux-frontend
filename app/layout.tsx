@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from "next/font/local";
+import AppShell from "@/components/AppShell";
 import "./globals.css";
 
 const inter = Inter({
@@ -186,7 +187,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className="min-h-full flex flex-col"
         style={{ fontFamily: "var(--font-inter), system-ui, sans-serif" }}
       >
-        {children}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );

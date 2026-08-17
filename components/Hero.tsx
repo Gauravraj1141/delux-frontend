@@ -61,9 +61,9 @@ export default function Hero() {
       <SmogEffects />
 
       {/* Title overlay — server-rendered for instant LCP */}
-      <div className="absolute inset-0 flex flex-col items-center justify-start pt-[12vh] sm:pt-[15vh] md:pt-[12vh] px-5 z-[3] pointer-events-none">
+      <div className="absolute inset-0 flex flex-col items-center justify-start pt-[12vh] sm:pt-[15vh] md:pt-[10vh] px-5 z-[3] pointer-events-none">
         <h1
-          className="text-[2.8rem] sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6.5rem] font-bold text-white text-center leading-[0.95]"
+          className="hero-heading text-[3.5rem] sm:text-[5.5rem] md:text-[5.5rem] lg:text-[7rem] font-bold text-white text-center leading-[0.95]"
           style={{
             fontFamily: "var(--font-hindi), sans-serif",
             textShadow:
@@ -77,7 +77,7 @@ export default function Hero() {
       </div>
 
       {/* Playlist bar — own stacking context above coverflow */}
-      <div className="absolute inset-x-0 top-[calc(12vh+12rem)] sm:top-[calc(15vh+16rem)] md:top-[calc(12vh+16rem)] lg:top-[calc(12vh+18rem)] z-[15] flex justify-center px-5 pointer-events-none">
+      <div className="absolute inset-x-0 top-[calc(12vh+9rem)] sm:top-[calc(15vh+12rem)] md:top-[calc(10vh+12rem)] lg:top-[calc(10vh+15rem)] z-[15] flex justify-center px-5 pointer-events-none">
         <PlaylistBar />
       </div>
 

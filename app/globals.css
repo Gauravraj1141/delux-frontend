@@ -191,6 +191,13 @@ body {
   animation: smog-rise-3 18s ease-in-out infinite;
 }
 
+/* Reduce heading on screens between 768px and 960px width */
+@media (min-width: 768px) and (max-width: 960px) {
+  .hero-heading {
+    font-size: 5rem !important;
+  }
+}
+
 /* Reduce expensive effects on mobile */
 @media (max-width: 767px) {
   .track-card {
