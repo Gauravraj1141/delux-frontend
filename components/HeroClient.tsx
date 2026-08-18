@@ -209,7 +209,7 @@ export function PlaylistBar() {
 
 export function HeroWeather() {
   const { playlists, activePlaylistId, loadPlaylist } = usePlaylist();
-  const [playlistOpen, setPlaylistOpen] = useState(false);
+  const [playlistOpen, setPlaylistOpen] = useState(true);
   const [weatherForceClose, setWeatherForceClose] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -228,7 +228,7 @@ export function HeroWeather() {
   }, [playlistOpen]);
 
   return (
-    <div className="absolute top-3 right-3 md:top-6 md:right-6 z-[8] pointer-events-auto">
+    <div className="absolute top-3 right-3 md:top-6 md:right-6 z-[18] pointer-events-auto">
       <WeatherCard
         onToggle={(isOpen) => {
           if (isOpen) setPlaylistOpen(false);
@@ -240,8 +240,9 @@ export function HeroWeather() {
       {playlists.length > 0 && (
         <div ref={dropdownRef} className="hidden md:block mt-2.5 relative">
           <div
-            className="rounded-2xl px-5 py-2.5 flex items-center gap-2 cursor-pointer select-none"
+            className="rounded-2xl px-5 flex items-center gap-2 cursor-pointer select-none"
             style={{
+              minHeight: 48,
               background: "rgba(255, 255, 255, 0.07)",
               backdropFilter: "blur(8px) saturate(1.2)",
               WebkitBackdropFilter: "blur(8px) saturate(1.2)",

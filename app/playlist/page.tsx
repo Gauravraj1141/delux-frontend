@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import PlaylistIndexClient from "./PlaylistIndexClient";
 
@@ -11,5 +12,9 @@ export const metadata: Metadata = {
 };
 
 export default function PlaylistIndexPage() {
-  return <PlaylistIndexClient />;
+  return (
+    <Suspense>
+      <PlaylistIndexClient />
+    </Suspense>
+  );
 }

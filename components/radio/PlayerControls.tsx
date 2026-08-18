@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Play,
   Pause,
@@ -53,7 +53,7 @@ function ProgressBar({
 }) {
   return (
     <div
-      className={`bg-white/5 cursor-pointer group ${className}`}
+      className={`bg-white/10 cursor-pointer group ${className}`}
       onClick={(e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         const pct = (e.clientX - rect.left) / rect.width;
@@ -66,7 +66,7 @@ function ProgressBar({
       aria-valuenow={Math.round(progress)}
     >
       <div
-        className="h-full bg-white/40 group-hover:bg-white/60 transition-colors duration-200"
+        className="h-full bg-white/90 group-hover:bg-white transition-colors duration-200"
         style={{ width: `${progress}%` }}
       />
     </div>
@@ -92,9 +92,28 @@ export default function PlayerControls({
   onToggleLoop,
 }: PlayerControlsProps) {
   const [volumeOpen, setVolumeOpen] = useState(false);
+  const playerRef = useRef<HTMLDivElement>(null);
+
+  // Close volume slider on outside click
+  useEffect(() => {
+    if (!volumeOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (playerRef.current && !playerRef.current.contains(e.target as Node)) {
+        setVolumeOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [volumeOpen]);
+
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const displayDuration = duration > 0 ? duration : track.duration;
   const remaining = displayDuration - currentTime;
+
+  const volPct = muted ? 0 : volume * 100;
+  const volTrackStyle = {
+    "--range-track": `linear-gradient(to right, rgba(255,255,255,0.9) ${volPct}%, rgba(255,255,255,0.2) ${volPct}%)`,
+  } as React.CSSProperties;
 
   const glassStyle = {
     background: "rgba(30, 22, 16, 0.55)",
@@ -106,7 +125,7 @@ export default function PlayerControls({
   };
 
   return (
-    <>
+    <div ref={playerRef}>
       {/* ===== MOBILE LAYOUT (<560px) ===== */}
       <div className="block sm:hidden rounded-2xl overflow-hidden" style={glassStyle}>
         <div className="px-5 pt-3 pb-2.5">
@@ -137,6 +156,7 @@ export default function PlayerControls({
                   value={muted ? 0 : volume}
                   onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
                   className="w-20"
+                  style={volTrackStyle}
                   aria-label="Volume"
                 />
               )}
@@ -250,7 +270,7 @@ export default function PlayerControls({
             <div
               className="flex-1 min-w-0 rounded-xl overflow-hidden"
               style={{
-                background: "rgba(255,255,255,0.06)",
+                background: "rgba(0,0,0,0.35)",
                 border: "1px solid rgba(255,255,255,0.06)",
               }}
             >
@@ -313,6 +333,7 @@ export default function PlayerControls({
                     value={muted ? 0 : volume}
                     onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
                     className="w-20"
+                    style={volTrackStyle}
                     aria-label="Volume"
                   />
                 </>
@@ -349,6 +370,6 @@ export default function PlayerControls({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

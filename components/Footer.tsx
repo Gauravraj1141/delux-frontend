@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full px-5 md:px-8 lg:px-12 pt-4 pb-28 md:pb-32 bg-background">
+    <footer className="w-full px-5 md:px-8 lg:px-12 pt-6 pb-28 md:pb-32 bg-background">
       <div className="max-w-[700px] mx-auto">
         <div className="flex items-center gap-4">
           <Link href="/about" className="text-[11px] md:text-[12px] text-white/40 hover:text-white/70 underline underline-offset-2 transition-colors duration-200">
@@ -11,8 +11,11 @@ export default function Footer() {
           <Link href="/playlist" className="text-[11px] md:text-[12px] text-white/40 hover:text-white/70 underline underline-offset-2 transition-colors duration-200">
             Playlists
           </Link>
+          <Link href="/blog" className="text-[11px] md:text-[12px] text-white/40 hover:text-white/70 underline underline-offset-2 transition-colors duration-200">
+            Blog
+          </Link>
         </div>
-        <p className="text-[10px] md:text-[11px] text-white/50 mt-4">
+        <p className="text-[10px] md:text-[11px] text-white/50 mt-14 md:mt-16">
           ❤️ DESIGNED AND DEVELOPED BY:
         </p>
         <p className="text-[10px] md:text-[11px] text-white/50 mt-1">

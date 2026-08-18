@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Play, Pause, ChevronDown } from "lucide-react";
 import { usePlaylist } from "@/components/radio/PlaylistContext";
@@ -103,14 +104,32 @@ function SongRow({
 export default function PlaylistIndexClient() {
   const { playlists, activePlaylistId, loadPlaylist, tracks: activeTracks } = usePlaylist();
   const { currentTrack, state, goToTrackIndex, togglePlay } = usePlayer();
+  const searchParams = useSearchParams();
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [songs, setSongs] = useState<Track[]>([]);
   const [loadingSongs, setLoadingSongs] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const initializedRef = useRef(false);
 
   const selectedPlaylist = playlists.find((p) => p.id === selectedId);
+
+  // Auto-select playlist from URL param or default to first playlist
+  useEffect(() => {
+    if (initializedRef.current || !playlists.length) return;
+    initializedRef.current = true;
+
+    const paramId = searchParams.get("id");
+    if (paramId) {
+      const id = Number(paramId);
+      if (playlists.some((p) => p.id === id)) {
+        selectPlaylist(id);
+        return;
+      }
+    }
+    selectPlaylist(playlists[0].id);
+  }, [playlists, searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Close mobile dropdown on outside click
   useEffect(() => {
@@ -182,8 +201,8 @@ export default function PlaylistIndexClient() {
           Playlists
         </h1>
 
-        {/* Mobile: playlist dropdown */}
-        <div className="md:hidden mb-6" ref={dropdownRef}>
+        {/* Mobile: sticky playlist dropdown */}
+        <div className="md:hidden sticky top-0 z-30 -mx-5 px-5 py-3 bg-background mb-3" ref={dropdownRef}>
           <div className="relative">
             <button
               onClick={() => setMobileDropdownOpen((v) => !v)}

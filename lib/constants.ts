@@ -17,7 +17,7 @@ export const EXTERNAL_LINKS = {
   ytMusic: "https://music.youtube.com/playlist?list=PLTJ1PnzCWyFw",
 };
 
-export const CONTACT_EMAIL = "gauravrajputsde@gmail.com";
+export const CONTACT_EMAIL = "shivamsrajput78@gmail.com";
 
 export const RADIO_STREAM_URL = "";
 

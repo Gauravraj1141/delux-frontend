@@ -34,7 +34,7 @@ export default function WeatherCard({
 }) {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [now, setNow] = useState(new Date());
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [tickerIndex, setTickerIndex] = useState(0);
 
   // Allow parent to force close
@@ -135,8 +135,8 @@ export default function WeatherCard({
 
       {/* Desktop: Location pill */}
       <div
-        className="hidden md:flex rounded-2xl px-5 py-2.5 items-center gap-2 cursor-pointer select-none"
-        style={glass}
+        className="hidden md:flex rounded-2xl px-5 items-center gap-2 cursor-pointer select-none"
+        style={{ ...glass, minHeight: 48 }}
         onClick={() => {
           const next = !open;
           setOpen(next);

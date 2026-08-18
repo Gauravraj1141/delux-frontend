@@ -90,10 +90,10 @@ export default function AboutPage() {
           <Section label="What We Play">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {[
-                { title: "Salon Classics", desc: "The evergreen 90s hits that every barber knows by heart" },
-                { title: "Highway Nights", desc: "Late-night truck cabin music for long drives" },
-                { title: "Dhaba Mornings", desc: "Chai-time songs from roadside eateries" },
-                { title: "Shaadi Season", desc: "Wedding songs and Sunday celebration tracks" },
+                { title: "90s Salon Vibe 💇", desc: "The evergreen 90s hits that every barber knows by heart" },
+                { title: "Monsoon Special ⛈️", desc: "Rain-soaked melodies for when the skies open up" },
+                { title: "Golden Ghazals 🪘", desc: "Timeless ghazals that speak straight to the soul" },
+                { title: "Feel Good 🧡", desc: "Warm, uplifting songs to brighten your day" },
               ].map((item) => (
                 <div key={item.title} className="rounded-xl p-4" style={glass}>
                   <p className="text-[13px] font-semibold text-white/80">{item.title}</p>
@@ -134,11 +134,44 @@ export default function AboutPage() {
             </div>
           </Section>
 
+          {/* FAQ */}
+          <Section label="Frequently Asked Questions">
+            <div className="flex flex-col gap-3">
+              {[
+                {
+                  q: "What is Deluxe Salon Songs?",
+                  a: "Deluxe Salon Songs (also called Delux Salon, Deluxe Saloon, Delux Saloon, डीलक्स सैलून) is a free online radio that plays 90s Bollywood music — the songs you hear in Indian barbershops, truck cabins, and highway dhabas. It plays 24/7 at deluxesalonsongs.com.",
+                },
+                {
+                  q: "Is Deluxe Salon Songs free?",
+                  a: "Yes, completely free. No sign-up, no ads, no subscriptions. All music plays through YouTube\u2019s embedded player.",
+                },
+                {
+                  q: "What kind of music does it play?",
+                  a: "90s Bollywood film music, ghazals, romantic ballads, and retro Hindi songs — Kumar Sanu, Udit Narayan, Alka Yagnik, Lata Mangeshkar, and more.",
+                },
+                {
+                  q: "Is this the same as Delux Salon or Deluxe Saloon?",
+                  a: "Yes! People search for it as Delux Salon, Deluxe Saloon, Salon Wala, DeluxeSalon, and डीलक्स सैलून. They all lead to the same site.",
+                },
+                {
+                  q: "Can I request a song?",
+                  a: "We don\u2019t take live requests yet, but you can email us song suggestions and we may add them to a future playlist.",
+                },
+              ].map((item) => (
+                <div key={item.q} className="rounded-xl p-4 md:p-5" style={glass}>
+                  <p className="text-[13px] md:text-[14px] font-semibold text-white/75">{item.q}</p>
+                  <p className="text-[12px] md:text-[13px] text-white/45 mt-1.5 leading-relaxed">{item.a}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+
           {/* Contact */}
           <Section label="Get in Touch">
             <div className="rounded-2xl p-5 md:p-6" style={glass}>
               <p className="text-[13px] md:text-[14px] text-white/50 mb-3">
-                Got a song suggestion, feedback, or a rights concern?
+                Got a song suggestion or a rights concern?
               </p>
               <a
                 href={`mailto:${CONTACT_EMAIL}`}

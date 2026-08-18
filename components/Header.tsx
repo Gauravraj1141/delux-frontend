@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Headphones } from "lucide-react";
 import { useListenerCount } from "@/lib/useListenerCount";
 
@@ -19,13 +20,13 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-[50] px-3 md:px-6 lg:px-8 py-2.5 md:py-3.5 pointer-events-none">
       <div className="flex items-center gap-2 md:gap-3">
         {/* Logo */}
-        <div className="pointer-events-auto flex-shrink-0">
+        <Link href="/" className="pointer-events-auto flex-shrink-0">
           <img
             src="/images/logo.png"
             alt="Deluxe Salon Songs"
             className="w-10 h-10 md:w-11 md:h-11 rounded-full"
           />
-        </div>
+        </Link>
 
         {/* Listener count — hidden until API responds */}
         {listenerCount !== null && (
