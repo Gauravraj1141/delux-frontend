@@ -1,4 +1,4 @@
-import { SmogEffects, PresenceTracker, PlaylistBar, HeroWeather, HeroPlayer } from "./HeroClient";
+import { SmogEffects, PresenceTracker, HeroWeather, HeroPlayer } from "./HeroClient";
 
 function getHeroImage(): string {
   const hour = new Date().getHours();
@@ -77,12 +77,7 @@ export default function Hero() {
         <PresenceTracker />
       </div>
 
-      {/* Playlist bar — own stacking context above coverflow */}
-      <div className="absolute inset-x-0 top-[calc(12vh+9rem)] sm:top-[calc(15vh+12rem)] md:top-[calc(10vh+12rem)] lg:top-[calc(10vh+15rem)] z-[15] flex justify-center px-5 pointer-events-none">
-        <PlaylistBar />
-      </div>
-
-      {/* Weather card — top right, hidden on mobile */}
+      {/* Weather card (desktop) + Playlist pill (mobile) — top right */}
       <HeroWeather />
 
       {/* Radio player pinned to bottom of hero */}

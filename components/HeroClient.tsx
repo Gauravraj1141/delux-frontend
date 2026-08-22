@@ -127,95 +127,16 @@ function EqBars() {
   );
 }
 
-// Mobile-only playlist bar (below heading)
-export function PlaylistBar() {
-  const { playlists, activePlaylistId, loadPlaylist } = usePlaylist();
-  const [open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const activePlaylist = playlists.find((p) => p.id === activePlaylistId);
-
-  useEffect(() => {
-    if (!open) return;
-    function handleClick(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [open]);
-
-  if (!playlists.length) return null;
-
-  return (
-    <div className="flex items-center gap-2.5 pointer-events-auto md:hidden">
-      <div ref={dropdownRef} className="relative">
-        <button
-          onClick={() => playlists.length > 1 && setOpen((v) => !v)}
-          className="flex items-center gap-2 rounded-full px-3.5 py-2 cursor-pointer transition-colors duration-200"
-          style={glass}
-        >
-          <EqBars />
-          <span className="text-[12px] font-medium text-white/85 max-w-[140px] truncate">
-            {activePlaylist?.title ?? "Deluxe Mix"}
-          </span>
-          {playlists.length > 1 && (
-            <ChevronDown
-              size={14}
-              className={`text-white/50 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-            />
-          )}
-        </button>
-
-        {open && playlists.length > 1 && (
-          <div
-            className="absolute top-full left-1/2 -translate-x-1/2 mt-1.5 min-w-[180px] rounded-xl py-1.5 overflow-hidden animate-fade-in z-20"
-            style={{
-              ...glass,
-              background: "rgba(20, 16, 12, 0.85)",
-              backdropFilter: "blur(20px) saturate(1.4)",
-              WebkitBackdropFilter: "blur(20px) saturate(1.4)",
-            }}
-          >
-            {playlists.map((playlist) => {
-              const isActive = playlist.id === activePlaylistId;
-              return (
-                <button
-                  key={playlist.id}
-                  onClick={() => {
-                    loadPlaylist(playlist.id);
-                    setOpen(false);
-                  }}
-                  className={`w-full flex items-center gap-2.5 px-3.5 py-2 text-left transition-colors duration-150 cursor-pointer ${
-                    isActive
-                      ? "text-white bg-white/8"
-                      : "text-white/60 hover:text-white/90 hover:bg-white/5"
-                  }`}
-                >
-                  {isActive && <EqBars />}
-                  <span className={`text-[12px] truncate ${isActive ? "font-semibold" : "font-normal"}`}>
-                    {playlist.title}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
 export function HeroWeather() {
   const { playlists, activePlaylistId, loadPlaylist } = usePlaylist();
   const [playlistOpen, setPlaylistOpen] = useState(true);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const [weatherForceClose, setWeatherForceClose] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const activePlaylist = playlists.find((p) => p.id === activePlaylistId);
 
-  // Close playlist dropdown on outside click
+  // Close playlist dropdown on outside click (desktop)
   useEffect(() => {
     if (!playlistOpen) return;
     function handleClick(e: MouseEvent) {
@@ -227,8 +148,93 @@ export function HeroWeather() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, [playlistOpen]);
 
+  // Lock body scroll when bottom sheet is open
+  useEffect(() => {
+    if (sheetOpen) {
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = ""; };
+    }
+  }, [sheetOpen]);
+
   return (
     <div className="absolute top-3 right-3 md:top-6 md:right-6 z-[18] pointer-events-auto">
+      {/* Mobile: playlist pill (replaces weather) */}
+      {playlists.length > 0 && (
+        <button
+          onClick={() => playlists.length > 1 && setSheetOpen(true)}
+          className="flex md:hidden items-center gap-2 rounded-full px-3.5 py-2 cursor-pointer transition-colors duration-200"
+          style={glass}
+        >
+          <EqBars />
+          <span className="text-[12px] font-medium text-white/85 max-w-[140px] truncate">
+            {activePlaylist?.title ?? "Deluxe Mix"}
+          </span>
+          {playlists.length > 1 && (
+            <ChevronDown size={14} className="text-white/50" />
+          )}
+        </button>
+      )}
+
+      {/* Mobile bottom sheet */}
+      {sheetOpen && (
+        <div
+          className="fixed inset-0 z-[70] md:hidden"
+          onClick={() => setSheetOpen(false)}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/50 animate-fade-in" />
+
+          {/* Sheet */}
+          <div
+            className="absolute inset-x-0 bottom-0 rounded-t-2xl py-4 animate-slide-up"
+            style={{
+              background: "rgba(20, 16, 12, 0.95)",
+              backdropFilter: "blur(24px) saturate(1.4)",
+              WebkitBackdropFilter: "blur(24px) saturate(1.4)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              borderBottom: "none",
+              maxHeight: "60vh",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Handle */}
+            <div className="flex justify-center mb-3">
+              <div className="w-10 h-1 rounded-full bg-white/20" />
+            </div>
+
+            <p className="px-5 text-[11px] font-semibold text-white/40 uppercase tracking-wider mb-2">
+              Playlists
+            </p>
+
+            <div className="overflow-y-auto" style={{ maxHeight: "calc(60vh - 70px)" }}>
+              {playlists.map((playlist) => {
+                const isActive = playlist.id === activePlaylistId;
+                return (
+                  <button
+                    key={playlist.id}
+                    onClick={() => {
+                      loadPlaylist(playlist.id);
+                      setSheetOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors duration-150 cursor-pointer ${
+                      isActive
+                        ? "text-white bg-white/8"
+                        : "text-white/60 hover:text-white/90 hover:bg-white/5"
+                    }`}
+                  >
+                    {isActive && <EqBars />}
+                    <span className={`text-[14px] truncate ${isActive ? "font-semibold" : "font-normal"}`}>
+                      {playlist.title}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop: weather card */}
       <WeatherCard
         onToggle={(isOpen) => {
           if (isOpen) setPlaylistOpen(false);
@@ -236,7 +242,7 @@ export function HeroWeather() {
         forceClose={weatherForceClose}
       />
 
-      {/* Desktop playlist strip — below weather, same styling */}
+      {/* Desktop playlist strip — below weather */}
       {playlists.length > 0 && (
         <div ref={dropdownRef} className="hidden md:block mt-2.5 relative">
           <div

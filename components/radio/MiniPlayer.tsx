@@ -1,8 +1,9 @@
 "use client";
 
-import { Play, Pause, SkipBack, SkipForward } from "lucide-react";
+import { Play, Pause, SkipBack, SkipForward, Share2, Loader2 } from "lucide-react";
 import { usePlayer } from "./PlayerContext";
 import { getYouTubeThumbnail } from "./trackData";
+import { useShareCard } from "./useShareCard";
 
 const glassStyle = {
   background: "rgba(30, 22, 16, 0.75)",
@@ -21,6 +22,8 @@ export default function MiniPlayer() {
     goToTrack,
     togglePlay,
   } = usePlayer();
+
+  const { share, shareState } = useShareCard();
 
   if (!currentTrack) return null;
 
@@ -67,6 +70,20 @@ export default function MiniPlayer() {
             {currentTrack.artist}
           </p>
         </div>
+
+        {/* Share */}
+        <button
+          onClick={() => share(currentTrack)}
+          disabled={shareState !== "idle"}
+          className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white transition-colors cursor-pointer flex-shrink-0"
+          aria-label="Share song"
+        >
+          {shareState === "idle" ? (
+            <Share2 size={16} />
+          ) : (
+            <Loader2 size={16} className="animate-spin" />
+          )}
+        </button>
 
         {/* Controls */}
         <div className="flex items-center gap-1 flex-shrink-0">

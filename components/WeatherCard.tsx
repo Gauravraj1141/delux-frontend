@@ -35,8 +35,6 @@ export default function WeatherCard({
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [now, setNow] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const [tickerIndex, setTickerIndex] = useState(0);
-
   // Allow parent to force close
   useEffect(() => {
     if (forceClose && open) setOpen(false);
@@ -64,14 +62,6 @@ export default function WeatherCard({
     return () => clearInterval(timer);
   }, []);
 
-  // Rotate mobile ticker every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTickerIndex((i) => (i + 1) % 4);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
   if (!weather) return null;
 
   const dayNum = now.getDate();
@@ -82,57 +72,8 @@ export default function WeatherCard({
     hour12: true,
   });
 
-  const tickerItems = [
-    `${weather.location} · ${weather.temp_c}°C`,
-    `${weather.condition}`,
-    `🌧 ${weather.chance_of_rain}% precipitation`,
-    `${dayNum} ${dayName} · ${timeStr}`,
-  ];
-
   return (
-    <div className="flex flex-col gap-2.5 w-auto md:w-[290px]">
-      {/* Mobile ticker pill — rolls through info like a meter */}
-      <div
-        className="md:hidden rounded-full px-4 py-1.5 overflow-hidden"
-        style={glass}
-      >
-        {/* Invisible sizer — sets width to longest item */}
-        <div className="relative" style={{ height: 20 }}>
-          {tickerItems.map((item, i) => (
-            <span
-              key={`sizer-${i}`}
-              className="block text-[11px] font-medium whitespace-nowrap invisible"
-              style={{ height: 0 }}
-              aria-hidden
-            >
-              {item}
-            </span>
-          ))}
-          {tickerItems.map((item, i) => {
-            const isActive = i === tickerIndex;
-            const isPrev = i === (tickerIndex - 1 + tickerItems.length) % tickerItems.length;
-            return (
-              <span
-                key={i}
-                className="absolute left-0 right-0 text-[11px] font-medium text-white/80 whitespace-nowrap text-center"
-                style={{
-                  lineHeight: "20px",
-                  transition: "transform 500ms ease-in-out, opacity 500ms ease-in-out",
-                  transform: isActive
-                    ? "translateY(0)"
-                    : isPrev
-                      ? "translateY(-100%)"
-                      : "translateY(100%)",
-                  opacity: isActive ? 1 : 0,
-                }}
-              >
-                {item}
-              </span>
-            );
-          })}
-        </div>
-      </div>
-
+    <div className="hidden md:flex flex-col gap-2.5 md:w-[290px]">
       {/* Desktop: Location pill */}
       <div
         className="hidden md:flex rounded-2xl px-5 items-center gap-2 cursor-pointer select-none"

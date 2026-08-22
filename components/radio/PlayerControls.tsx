@@ -8,9 +8,12 @@ import {
   Shuffle,
   Volume2,
   VolumeX,
+  Share2,
+  Loader2,
 } from "lucide-react";
 import type { Track } from "./trackData";
 import { getYouTubeThumbnail } from "./trackData";
+import { useShareCard } from "./useShareCard";
 
 interface PlayerControlsProps {
   track: Track;
@@ -93,6 +96,7 @@ export default function PlayerControls({
 }: PlayerControlsProps) {
   const [volumeOpen, setVolumeOpen] = useState(false);
   const playerRef = useRef<HTMLDivElement>(null);
+  const { share, shareState } = useShareCard();
 
   // Close volume slider on outside click
   useEffect(() => {
@@ -140,6 +144,18 @@ export default function PlayerControls({
               </p>
             </div>
             <div className="flex items-center gap-2 mt-1 flex-shrink-0">
+              <button
+                onClick={() => share(track)}
+                disabled={shareState !== "idle"}
+                className="cursor-pointer text-white/60 hover:text-white transition-colors duration-200"
+                aria-label="Share song"
+              >
+                {shareState === "idle" ? (
+                  <Share2 size={18} />
+                ) : (
+                  <Loader2 size={18} className="animate-spin" />
+                )}
+              </button>
               <button
                 onClick={() => setVolumeOpen((v) => !v)}
                 className="cursor-pointer text-white transition-colors duration-200"
@@ -356,6 +372,18 @@ export default function PlayerControls({
                     aria-label={shuffleOn ? "Disable shuffle" : "Enable shuffle"}
                   >
                     <Shuffle size={15} />
+                  </button>
+                  <button
+                    onClick={() => share(track)}
+                    disabled={shareState !== "idle"}
+                    className="w-8 h-8 flex items-center justify-center text-white/40 hover:text-white/70 transition-colors duration-200 cursor-pointer"
+                    aria-label="Share song"
+                  >
+                    {shareState === "idle" ? (
+                      <Share2 size={15} />
+                    ) : (
+                      <Loader2 size={15} className="animate-spin" />
+                    )}
                   </button>
                   <button
                     onClick={() => setVolumeOpen(true)}
